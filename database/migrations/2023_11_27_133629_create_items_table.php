@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->index();
             $table->string('name')->nullable();
-            $table->string('address')->nullable();
-            $table->string('phone_no', 30)->nullable();
-            $table->string('mobile_no', 30)->nullable();
-            $table->string('email', 75)->nullable();
-            $table->string('fax', 75)->nullable();
-            $table->string('website', 75)->nullable();
-            $table->string('other', 75)->nullable();
-            $table->string('contact_person')->nullable();
+            $table->string('description')->nullable();
+            $table->decimal('price', 8, 2);
+
+            $table->unsignedBigInteger('unit_id');
+            $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
+
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 
             $table->unsignedBigInteger('organization_id');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
@@ -37,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('items');
     }
 };

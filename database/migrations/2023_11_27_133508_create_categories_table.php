@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->index();
             $table->string('name')->nullable();
-            $table->string('phone_no', 30)->nullable();
-            $table->string('mobile_no', 30)->nullable();
-            $table->string('address')->nullable();
-            $table->date('birth_date');
+            $table->string('description')->nullable();
 
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('organization_id');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
 
             $table->timestamps();
             $table->softDeletes();
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists('categories');
     }
 };

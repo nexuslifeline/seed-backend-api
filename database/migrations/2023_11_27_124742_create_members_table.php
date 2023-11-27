@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('mobile_no', 30)->nullable();
             $table->string('address')->nullable();
 
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->timestamps();
