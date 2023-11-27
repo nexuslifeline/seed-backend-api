@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->index();
             $table->string('name')->nullable();
-            $table->string('phone_no')->nullable();
-            $table->string('mobile_no')->nullable();
+            $table->string('phone_no', 30)->nullable();
+            $table->string('mobile_no', 30)->nullable();
             $table->string('address')->nullable();
 
             $table->unsignedBigInteger('user_id');
