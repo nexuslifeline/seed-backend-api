@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organization_user', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('organization_id');
-            $table->unsignedBigInteger('user_id');
-            // Add other pivot-related fields if needed
-            $table->timestamps();
+            $table->uuid('uuid')->index();
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
 
-            // Define foreign key constraints
+            $table->unsignedBigInteger('organization_id');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->timestamps();
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organization_user');
+        Schema::dropIfExists('roles');
     }
 };
