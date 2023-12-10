@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
+use Illuminate\Support\Str;
 
 class ProductsTableSeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class ProductsTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 10) as $index) {
+        foreach (range(1, 100) as $index) {
             $unitId = DB::table('units')
                     ->inRandomOrder()
                     ->pluck('id')
@@ -28,13 +29,20 @@ class ProductsTableSeeder extends Seeder
                     ->pluck('id')
                     ->first();
 
+            $organizationId = DB::table('organizations')
+                    ->inRandomOrder()
+                    ->pluck('id')
+                    ->first();
+
 
             DB::table('products')->insert([
-                'name' => $faker->productName,
+                'uuid' => Str::uuid(),
+                'name' => ucfirst($faker->word) . ' ' . $faker->word,
                 'description' => $faker->sentence,
                 'price' => $faker->randomFloat(2, 10, 100),
                 'unit_id' => $unitId,
                 'category_id' => $categoryId,
+                'organization_id' => $organizationId,
                 // Add any other relevant product fields
             ]);
         }

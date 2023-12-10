@@ -19,7 +19,7 @@ class OrgUsersTableSeeder extends Seeder
         $faker = Faker::create();
 
         // org users
-        foreach (range(1, 50) as $index) {
+        foreach (range(1, 25) as $index) {
             $userId = DB::table('users')->insertGetId([
                 'uuid' => Str::uuid(),
                 'email' => $faker->unique()->safeEmail,

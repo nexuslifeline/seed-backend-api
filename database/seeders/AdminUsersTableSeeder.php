@@ -18,8 +18,8 @@ class AdminUsersTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // org users
-        foreach (range(1, 50) as $index) {
+        // admin users
+        foreach (range(1, 15) as $index) {
             $userId = DB::table('users')->insertGetId([
                 'uuid' => Str::uuid(),
                 'email' => $faker->unique()->safeEmail,

@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->date('invoice_date')->nullable();
             $table->date('due_date')->nullable();
-            $table->decimal('total_amount', 10, 2)->default(0.00);
+            $table->decimal('total_amount', 10, 2)->nullable()->default(0.00);
             $table->enum('status', ['draft', 'sent', 'paid'])->default('draft');
 
             $table->string('description')->nullable();

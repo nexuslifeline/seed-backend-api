@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('phone_no', 30)->nullable();
             $table->string('mobile_no', 30)->nullable();
             $table->string('email', 75)->nullable();
-            $table->string('fax', 75)->nullable();
-            $table->string('website', 75)->nullable();
-            $table->string('other', 75)->nullable();
+            $table->string('fax')->nullable();
+            $table->string('website')->nullable();
+            $table->string('other')->nullable();
             $table->string('contact_person')->nullable();
 
             $table->unsignedBigInteger('organization_id');

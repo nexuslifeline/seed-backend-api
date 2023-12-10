@@ -18,12 +18,22 @@ class CustomersTableSeeder extends Seeder
         $faker = Faker::create();
 
         foreach (range(1, 100) as $index) {
+            $organizationId = DB::table('organizations')
+                    ->inRandomOrder()
+                    ->pluck('id')
+                    ->first();
+
+
             DB::table('customers')->insert([
                 'name' => $faker->name,
                 'uuid' => Str::uuid(),
                 'phone_no' => $faker->phoneNumber,
                 'mobile_no' => $faker->phoneNumber,
                 'address' => $faker->address,
+                'website' => $faker->url,
+                'fax' => $faker->numerify('###-###-####'),
+                'email' => $faker->email,
+                'organization_id' => $organizationId
                 // Add any other relevant organization fields
             ]);
         }

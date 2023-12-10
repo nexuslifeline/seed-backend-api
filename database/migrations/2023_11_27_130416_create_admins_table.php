@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('phone_no', 30)->nullable();
             $table->string('mobile_no', 30)->nullable();
             $table->string('address')->nullable();
-            $table->date('birth_date');
+            $table->date('birth_date')->nullable();
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

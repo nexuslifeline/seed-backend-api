@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('uuid')->index();
             $table->string('name')->nullable();
             $table->string('description')->nullable();
-            $table->decimal('price', 8, 2);
+            $table->decimal('price', 8, 2)->nullable()->default(0.00);
 
             $table->unsignedBigInteger('unit_id');
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
