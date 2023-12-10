@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->index();
+            $table->string('abbreviation')->nullable();
             $table->string('name')->nullable();
             $table->string('description')->nullable();
 
