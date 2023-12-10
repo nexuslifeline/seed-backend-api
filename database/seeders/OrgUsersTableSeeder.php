@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Faker\Factory as Faker;
 
-class UsersTableSeeder extends Seeder
+class OrgUsersTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,10 +20,20 @@ class UsersTableSeeder extends Seeder
 
         // org users
         foreach (range(1, 50) as $index) {
-            $user = DB::table('users')->insertGetId([
+            $userId = DB::table('users')->insertGetId([
                 'uuid' => Str::uuid(),
                 'email' => $faker->unique()->safeEmail,
                 'password' => Hash::make('123456'), // You may customize the password
+            ]);
+
+
+            DB::table('members')->insertGetId([
+                'uuid' => Str::uuid(),
+                'name' => $faker->name,
+                'phone_no' => $faker->phoneNumber,
+                'mobile_no' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'user_id' => $userId
             ]);
 
             // Attach the user to one or more organizations
@@ -35,21 +45,13 @@ class UsersTableSeeder extends Seeder
                     ->inRandomOrder()
                     ->pluck('id')
                     ->first();
+
                 DB::table('organization_user')->insert([
-                    'user_id' => $user,
+                    'user_id' => $userId,
                     'organization_id' => $organizationId,
                     'role_id' => $roleId,
                 ]);
             }
-        }
-
-        // admin users
-        foreach (range(1, 10) as $index) {
-            DB::table('users')->insert([
-                'uuid' => Str::uuid(),
-                'email' => $faker->unique()->safeEmail,
-                'password' => Hash::make('123456'), // You may customize the password
-            ]);
         }
     }
 }
