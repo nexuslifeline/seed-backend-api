@@ -25,8 +25,6 @@ return new class extends Migration
             $table->decimal('unit_price', 10, 2)->default(0.00);
             $table->decimal('line_total', 10, 2)->default(0.00);
             $table->timestamps();
-
-            $table->timestamps();
         });
     }
 
