@@ -21,6 +21,15 @@ return new class extends Migration
             $table->unsignedBigInteger('organization_id');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
 
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
+
+            $table->unsignedBigInteger('deleted_by')->nullable();
+            $table->foreign('deleted_by')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
             $table->softDeletes();
         });

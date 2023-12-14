@@ -10,6 +10,8 @@ class InvoiceItem extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);
