@@ -4,16 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
+use App\Models\Member;
+use App\Models\Organization;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
     // Define a constant for the name of the authentication token
     const AUTH_TOKEN_NAME = 'user_auth_token';
+    const INITIAL_USER_ORGANIZATION_ROLE = 'Administrator';
     /**
      * Register a new user.
      *
@@ -28,16 +33,41 @@ class AuthController extends Controller
             // Validate the request
             $fields = $request->validated();
 
+            // Start a database transaction
+            DB::beginTransaction();
+
             // Create a new user
             $user = User::create([
-                'uuid' => Str::uuid(),
-                'name' => $fields['name'],
                 'email' => $fields['email'],
                 'password' => bcrypt($fields['password'])
             ]);
 
+            // Create a member
+            Member::create([
+                'name' => $fields['name'],
+                'user_id' => $user->id
+            ]);
+
+            // Create a new organization
+            $organization = Organization::create([
+                'name' => $fields['organization'],
+            ]);
+
+            $role = Role::create([
+                'name' => self::INITIAL_USER_ORGANIZATION_ROLE,
+                'organization_id' => $organization->id
+            ]);
+
+            // Attach the organization to the user
+            $user->organizations()->attach($organization->id, ['role_id' => $role->id]);
+
+            // Commit the database transaction
+            DB::commit();
+
+
             // Create a token for authentication
             $token = $user->createToken(self::AUTH_TOKEN_NAME)->plainTextToken;
+
 
             // Build the response
             $response = [
@@ -49,7 +79,7 @@ class AuthController extends Controller
             return response($response, 201);
         } catch (\Exception $e) {
             // Handle the exception, log it, or return an appropriate error response
-            return response(['message' => 'Error creating user.'], 500);
+            return response(['message' => 'Error creating user.' . $e->getMessage()], 500);
         }
     }
 
