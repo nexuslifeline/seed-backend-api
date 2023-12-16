@@ -22,17 +22,24 @@ class AdminUsersTableSeeder extends Seeder
         foreach (range(1, 15) as $index) {
             $userId = DB::table('users')->insertGetId([
                 'uuid' => Str::uuid(),
+                'name' => $faker->name,
                 'email' => $faker->unique()->safeEmail,
                 'password' => Hash::make('123456'), // You may customize the password
+                'type' => 'admin',
             ]);
 
-            DB::table('admins')->insertGetId([
-                'uuid' => Str::uuid(),
-                'name' => $faker->name,
+            DB::table('contacts')->insert([
+                'user_id' => $userId,
                 'phone_no' => $faker->phoneNumber,
                 'mobile_no' => $faker->phoneNumber,
                 'address' => $faker->address,
-                'user_id' => $userId
+                'city' => $faker->city,
+                'state' => $faker->state,
+                'zip_code' => $faker->postcode,
+                'facebook' => $faker->url,
+                'twitter' => $faker->url,
+                'linkedin' => $faker->url,
+                'website' => $faker->url
             ]);
         }
     }
