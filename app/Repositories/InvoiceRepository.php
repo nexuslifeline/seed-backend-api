@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Invoice;
 
-class EloquentInvoiceRepository implements InvoiceRepositoryInterface
+class InvoiceRepository implements InvoiceRepositoryInterface
 {
     /**
      * Creates a new Invoice record in the database.

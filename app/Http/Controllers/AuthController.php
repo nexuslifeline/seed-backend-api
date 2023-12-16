@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
-use App\Models\Member;
-use App\Models\Organization;
-use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use App\Models\User;
+use App\Repositories\OrganizationRepositoryInterface;
+use App\Repositories\RoleRepositoryInterface;
+use App\Repositories\UserRepositoryInterface;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -19,6 +17,28 @@ class AuthController extends Controller
     // Define a constant for the name of the authentication token
     const AUTH_TOKEN_NAME = 'user_auth_token';
     const INITIAL_USER_ORGANIZATION_ROLE = 'Administrator';
+
+    private $userRepository;
+    private $organizationRepository;
+    private $roleRepository;
+
+    /**
+     * Constructor for the class.
+     *
+     * @param UserRepositoryInterface $userRepository description
+     * @param OrganizationRepositoryInterface $organizationRepository description
+     * @param RoleRepositoryInterface $roleRepository description
+     */
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        OrganizationRepositoryInterface $organizationRepository,
+        RoleRepositoryInterface $roleRepository
+    ) {
+        $this->userRepository = $userRepository;
+        $this->organizationRepository = $organizationRepository;
+        $this->roleRepository = $roleRepository;
+    }
+
     /**
      * Register a new user.
      *
@@ -37,23 +57,18 @@ class AuthController extends Controller
             DB::beginTransaction();
 
             // Create a new user
-            $user = User::create([
+            $user = $this->userRepository->create([
+                'name' => $fields['name'],
                 'email' => $fields['email'],
                 'password' => bcrypt($fields['password'])
             ]);
 
-            // Create a member
-            Member::create([
-                'name' => $fields['name'],
-                'user_id' => $user->id
-            ]);
-
             // Create a new organization
-            $organization = Organization::create([
+            $organization = $this->organizationRepository->create([
                 'name' => $fields['organization'],
             ]);
 
-            $role = Role::create([
+            $role = $this->roleRepository->create([
                 'name' => self::INITIAL_USER_ORGANIZATION_ROLE,
                 'organization_id' => $organization->id
             ]);
@@ -64,10 +79,8 @@ class AuthController extends Controller
             // Commit the database transaction
             DB::commit();
 
-
             // Create a token for authentication
             $token = $user->createToken(self::AUTH_TOKEN_NAME)->plainTextToken;
-
 
             // Build the response
             $response = [
@@ -107,7 +120,7 @@ class AuthController extends Controller
             }
 
             // Check if the user exists based on the email
-            $user = User::where('email', $fields['email'])->first();
+            $user = $this->userRepository->findByEmail($fields['email']);
 
             // Check if the user is found and if the password is correct
             if (!$user || !Hash::check($fields['password'], $user->password)) {

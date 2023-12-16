@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Organization;
 
-class EloquentOrganizationRepository implements OrganizationRepositoryInterface
+class OrganizationRepository implements OrganizationRepositoryInterface
 {
     /**
      * Creates a new Organization record in the database.

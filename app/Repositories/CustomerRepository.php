@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Customer;
 
-class EloquentCustomerRepository implements CustomerRepositoryInterface
+class CustomerRepository implements CustomerRepositoryInterface
 {
     /**
      * Creates a new Customer record in the database.

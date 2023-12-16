@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 
-class EloquentUserRepository implements UserRepositoryInterface
+class UserRepository implements UserRepositoryInterface
 {
     /**
      * Creates a new User record in the database.
@@ -52,6 +52,18 @@ class EloquentUserRepository implements UserRepositoryInterface
     public function find($id)
     {
         return User::findOrFail($id);
+    }
+
+    /**
+     * Find a user by their email address.
+     *
+     * @param string $email The email address of the user.
+     * @throws \Exception If an error occurs during the operation.
+     * @return User|null The user object if found, or null if not found.
+     */
+    public function findByEmail($email)
+    {
+        return User::where('email', $email)->first();
     }
 
     /**

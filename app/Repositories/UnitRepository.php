@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Unit;
 
-class EloquentUnitRepository implements UnitRepositoryInterface
+class UnitRepository implements UnitRepositoryInterface
 {
     /**
      * Creates a new Unit record in the database.

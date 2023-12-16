@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 trait UuidGenerator
@@ -9,7 +10,7 @@ trait UuidGenerator
     /**
      * Boot method to register event listeners.
      */
-    protected static function bootUuidGeneratable()
+    protected static function bootUuidGenerator()
     {
         // fired before creating
         static::creating(function ($model) {

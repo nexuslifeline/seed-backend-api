@@ -5,17 +5,16 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Traits\Auditable;
-use App\Traits\UuidGeneratable;
+use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, Auditable, UuidGeneratable;
+    use HasApiTokens, HasFactory, Notifiable, Auditable, UuidGenerator;
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +22,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'uuid',
         'name',
         'email',
         'password',
@@ -50,22 +50,21 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
-    public function member(): HasOne
-    {
-        return $this->hasOne(Member::class);
-    }
-
-    public function admin(): HasOne
-    {
-        return $this->hasOne(Admin::class);
-    }
-
+    /**
+     * Get the organizations associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function organizations(): BelongsToMany
     {
         return $this->belongsToMany(Organization::class);
     }
 
+    /**
+     * Retrieves the roles associated with this user.
+     *
+     * @return BelongsToMany The roles associated with this user.
+     */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);

@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Product;
 
-class EloquentProductRepository implements ProductRepositoryInterface
+class ProductRepository implements ProductRepositoryInterface
 {
     /**
      * Creates a new Product record in the database.

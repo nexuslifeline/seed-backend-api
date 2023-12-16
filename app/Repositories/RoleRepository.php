@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Role;
 
-class EloquentRoleRepository implements RoleRepositoryInterface
+class RoleRepository implements RoleRepositoryInterface
 {
     /**
      * Creates a new Role record in the database.
