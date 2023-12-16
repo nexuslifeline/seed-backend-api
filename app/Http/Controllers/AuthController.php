@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\OrganizationRepositoryInterface;
@@ -84,7 +85,7 @@ class AuthController extends Controller
 
             // Build the response
             $response = [
-                'user' => $user,
+                'user' => new UserResource($user),
                 'token' => $token
             ];
 
@@ -135,7 +136,7 @@ class AuthController extends Controller
 
             // Prepare the response with the user and token
             $response = [
-                'user' => $user,
+                'user' => new UserResource($user),
                 'token' => $token
             ];
 
