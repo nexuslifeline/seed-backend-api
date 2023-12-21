@@ -36,6 +36,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
             'index', 'show', 'store', 'update', 'destroy'
         ])->parameters([
             'products' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
-        ])->middleware('belongs.to.organization:Product,index,show');
+        ])->middleware('belongs.to.organization:Product');
     });
   });

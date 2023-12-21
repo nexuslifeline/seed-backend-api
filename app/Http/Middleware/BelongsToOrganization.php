@@ -18,6 +18,7 @@ class BelongsToOrganization
      */
     public function handle(Request $request, Closure $next, $modelClass, ...$exemptedActions): Response
     {
+        $exemptedActions = $exemptedActions ?: ['index', 'store'];
         // Get the organization UUID from the request route
         $orgUuid = $request->route('orgUuid');
 
@@ -32,7 +33,7 @@ class BelongsToOrganization
         $currentAction = $request->route()->getActionMethod();
 
         // Check if the current route matches any of the exempted endpoints
-        if (Arr::where($exemptedActions, function ($pattern) use ($currentAction) {
+        if (Arr::first($exemptedActions, function ($pattern) use ($currentAction) {
             return $pattern === $currentAction;
         })) {
             // If the current route matches any of the exempted endpoints, skip the middleware logic
