@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,13 +16,26 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+// Create a new tenant user under a new organization
 Route::post('/register', [AuthController::class, 'register']);
+// Logs in a user
 Route::post('/login', [AuthController::class, 'login']);
 
-
+// Accessible only to authenticated users
 Route::group(['middleware' => ['auth:sanctum']], function() {
+    // Returns the currently authenticated user
     Route::get('/me', function (Request $request) {
         return $request->user();
     });
+    // Logout the currently authenticated user
     Route::post('/logout',   [AuthController::class, 'logout']);
+
+    // Accesssible only to users in the organization
+    Route::prefix('organizations/{orgUuid}')->middleware('user.in.organization')->group(function () {
+        Route::apiResource('/products', ProductController::class)->only([
+            'index', 'show', 'store', 'update', 'destroy'
+        ])->parameters([
+            'products' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
+        ])->middleware('belongs.to.organization:Product,index,show');
+    });
   });

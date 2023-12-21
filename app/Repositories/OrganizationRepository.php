@@ -55,6 +55,18 @@ class OrganizationRepository implements OrganizationRepositoryInterface
     }
 
     /**
+     * Find a product by its UUID.
+     *
+     * @param string $uuid The UUID of the product.
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the product with the given UUID is not found.
+     * @return \App\Models\Product The product with the given UUID.
+     */
+    public function findByUuid($uuid)
+    {
+        return Organization::where('uuid', $uuid)->firstOrFail();
+    }
+
+    /**
      * Retrieves all records from the database.
      *
      * @return \Illuminate\Database\Eloquent\Collection

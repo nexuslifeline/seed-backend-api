@@ -14,5 +14,7 @@ interface OrganizationRepositoryInterface
 
     public function find($id);
 
+    public function findByUuid($uuid);
+
     public function all();
 }

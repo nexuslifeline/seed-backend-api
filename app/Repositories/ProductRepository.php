@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Log;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -18,27 +19,33 @@ class ProductRepository implements ProductRepositoryInterface
         return Product::create($data);
     }
 
+
     /**
-     * Updates an Product with the given data.
+     * Update a product by UUID.
      *
-     * @param Product $product The Product to update.
-     * @param array $data The data to update the Product with.
-     * @return Product The updated Product.
+     * @param string $uuid The UUID of the product.
+     * @param array<mixed> $data The data to update the product with.
+     * @return \App\Models\Product The updated product.
      */
-    public function update(Product $product, array $data)
+    public function update(string $uuid, array $data)
     {
+        $product = $this->findByUuid($uuid);
         $product->update($data);
         return $product;
     }
 
+
     /**
-     * Deletes an product.
+     * Deletes a product by its UUID.
      *
-     * @param Product $product The product to delete.
-     * @throws Some_Exception_Class When an error occurs while deleting the product.
+     * @param string $uuid The UUID of the product to be deleted.
+     * @throws Some_Exception_Class If an error occurs while deleting the product.
+     * @return void
      */
-    public function delete(Product $product)
+    public function delete(string $uuid)
     {
+        Log::info('Deleting product with UUID: ' . $uuid);
+        $product = Product::where('uuid', $uuid)->firstOrFail();
         $product->delete();
     }
 
@@ -55,6 +62,18 @@ class ProductRepository implements ProductRepositoryInterface
     }
 
     /**
+     * Finds a product by its UUID.
+     *
+     * @param mixed $uuid The UUID of the product.
+     * @throws Illuminate\Database\Eloquent\ModelNotFoundException If no product is found.
+     * @return Product The Product model instance.
+     */
+    public function findByUuid($uuid)
+    {
+        return Product::where('uuid', $uuid)->firstOrFail();
+    }
+
+    /**
      * Retrieves all records from the database.
      *
      * @return \Illuminate\Database\Eloquent\Collection
@@ -62,5 +81,17 @@ class ProductRepository implements ProductRepositoryInterface
     public function all()
     {
         return Product::all();
+    }
+
+    /**
+     * Paginate the results of the query.
+     *
+     * @param int $perPage The number of items per page.
+     * @throws Some_Exception_Class Description of exception.
+     * @return \Illuminate\Contracts\Pagination\Paginator The paginated results.
+     */
+    public function paginate($perPage = 25)
+    {
+        return Product::paginate($perPage);
     }
 }
