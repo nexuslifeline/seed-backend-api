@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BelongsToOrganization
 {
+    const DEFAULT_EXEMPTED_ACTIONS = ['index', 'store'];
     /**
      * Handle an incoming request.
      *
@@ -18,7 +19,7 @@ class BelongsToOrganization
      */
     public function handle(Request $request, Closure $next, $modelClass, ...$exemptedActions): Response
     {
-        $exemptedActions = $exemptedActions ?: ['index', 'store'];
+        $exemptedActions = $exemptedActions ?: self::DEFAULT_EXEMPTED_ACTIONS;
         // Get the organization UUID from the request route
         $orgUuid = $request->route('orgUuid');
 

@@ -6,8 +6,11 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductResource;
 use App\Repositories\ProductRepositoryInterface;
+use App\Utils\Constants;
+use App\Utils\ErrorMessages;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
@@ -36,14 +39,15 @@ class ProductController extends Controller
     {
         try {
             // Retrieve the per_page parameter from the request
-            $perPage = $request->input('per_page', 25);
+            $perPage = $request->input('per_page', Constants::DEFAULT_PER_PAGE);
             // Retrieve the products from the repository
             $products = $this->productRepository->paginate($perPage);
             // Return a collection of product resources
             return ProductResource::collection($products);
         } catch (\Exception $e) {
+            // Something went wrong
             Log::error("Error during product list fetch. " . $e->getMessage());
-            return response()->json(['error' => 'Something went wrong. ' . $e->getMessage()], 500);
+            return response()->json(['error' => ErrorMessages::SOMETHING_WENT_WRONG . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -59,13 +63,17 @@ class ProductController extends Controller
         try {
             // Retrieve the product from the repository
             $product = $this->productRepository->findByUuid($uuid);
+            // Load the related models (unit, organization, category)
             $product->load('unit', 'category', 'organization');
+            // Return the product resource
             return new ProductResource($product);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Not found'], 404);
+            // Resource not found
+            return response()->json(['error' => ErrorMessages::RESOURCE_NOT_FOUND], Response::HTTP_NOT_FOUND);
         } catch (\Exception $e) {
+            // Something went wrong
             Log::error("Error during product fetch. " . $e->getMessage());
-            return response()->json(['error' => 'Something went wrong. ' . $e->getMessage()], 500);
+            return response()->json(['error' => ErrorMessages::SOMETHING_WENT_WRONG . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -83,13 +91,14 @@ class ProductController extends Controller
             $data = $request->validated();
             // Create the product
             $product = $this->productRepository->create($data);
-            // Load the related models (unit and category)
+            // Load the related models (unit, organization, category)
             $product->load('unit', 'category', 'organization');
             // Return the product resource
             return new ProductResource($product);
         } catch (\Exception $e) {
+            // Something went wrong
             Log::error("Error during product creation. " . $e->getMessage());
-            return response()->json(['error' => 'Something went wrong. ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Something went wrong. ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -110,17 +119,19 @@ class ProductController extends Controller
             // Update the product
             $product = $this->productRepository->update($uuid, $data);
 
-            // Load the related models (unit and category)
+            // Load the related models (unit, organization, category)
             $product->load('unit', 'category', 'organization');
 
+            // Return the product resource
             return new ProductResource($product);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Not found' . $uuid . $e->getMessage()], 404);
+            // Resource not found
+            return response()->json(['error' => ErrorMessages::RESOURCE_NOT_FOUND . $uuid . $e->getMessage()], Response::HTTP_NOT_FOUND);
         } catch (\Exception $e) {
+            // Something went wrong
             Log::error("Error during product update. " . $e->getMessage());
-            return response()->json(['error' => 'Something went wrong. ' . $e->getMessage()], 500);
+            return response()->json(['error' => ErrorMessages::SOMETHING_WENT_WRONG . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**
@@ -133,16 +144,17 @@ class ProductController extends Controller
     public function destroy(string $orgUuid, string $uuid)
     {
         try {
-             // Delete the product
+            // Delete the product
             $this->productRepository->delete($uuid);
             // no content response
             return response()->noContent();
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Not found'], 404);
+            // Resource not found
+            return response()->json(['error' => ErrorMessages::RESOURCE_NOT_FOUND], Response::HTTP_NOT_FOUND);
         } catch (\Exception $e) {
+            // Something went wrong
             Log::error("Error during product deletion. " . $e->getMessage());
-            return response()->json(['error' => 'Something went wrong. ' . $e->getMessage()], 500);
+            return response()->json(['error' => ErrorMessages::SOMETHING_WENT_WRONG . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
     }
 }
