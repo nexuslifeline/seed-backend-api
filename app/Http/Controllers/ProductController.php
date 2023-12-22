@@ -63,7 +63,11 @@ class ProductController extends Controller
             // Retrieve the product from the repository
             $product = $this->productRepository->findByUuid($uuid);
             // Load the related models (unit, organization, category)
-            $product->load('unit', 'category', 'organization');
+            $product->load([
+                'unit:id,uuid,name',
+                'category:id,uuid,name',
+                'organization:id,uuid,name'
+            ]);
             // Return the product resource
             return new ProductResource($product);
         } catch (ModelNotFoundException $e) {
@@ -91,7 +95,11 @@ class ProductController extends Controller
             // Create the product
             $product = $this->productRepository->create($data);
             // Load the related models (unit, organization, category)
-            $product->load('unit', 'category', 'organization');
+            $product->load([
+                'unit:id,uuid,name',
+                'category:id,uuid,name',
+                'organization:id,uuid,name'
+            ]);
             // Return the product resource
             return new ProductResource($product);
         } catch (\Exception $e) {
@@ -119,7 +127,11 @@ class ProductController extends Controller
             $product = $this->productRepository->update($uuid, $data);
 
             // Load the related models (unit, organization, category)
-            $product->load('unit', 'category', 'organization');
+            $product->load([
+                'unit:id,uuid,name',
+                'category:id,uuid,name',
+                'organization:id,uuid,name'
+            ]);
 
             // Return the product resource
             return new ProductResource($product);

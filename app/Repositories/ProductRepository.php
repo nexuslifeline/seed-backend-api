@@ -80,7 +80,11 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function all()
     {
-        return Product::all();
+        return Product::with(['unit' => function ($q) {
+            $q->select('id', 'uuid', 'name');
+        }, 'category' => function ($q) {
+            $q->select('id', 'uuid', 'name');
+        }])->get();
     }
 
     /**
@@ -92,6 +96,10 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function paginate($perPage = 25)
     {
-        return Product::paginate($perPage);
+        return Product::with(['unit' => function ($q) {
+            $q->select('id', 'uuid', 'name');
+        }, 'category' => function ($q) {
+            $q->select('id', 'uuid', 'name');
+        }])->paginate($perPage);
     }
 }
