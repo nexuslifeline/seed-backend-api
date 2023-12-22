@@ -34,15 +34,15 @@ class CategoryController extends Controller
      * @throws \Exception If an error occurs during the category list fetch.
      * @return \App\Http\Resources\CategoryResource A collection of category resources.
      */
-    public function index(Request $request)
+    public function index(Request $request, string $orgUuid)
     {
         try {
             // Retrieve the per_page parameter from the request
             $perPage = $request->input('per_page');
-            // Retrieve the categorys from the repository
-            $categorys = $this->categoryRepository->paginate($perPage);
+            // Retrieve the categories from the repository
+            $categories = $this->categoryRepository->findByOrgUuidAndPaginate($orgUuid, $perPage);
             // Return a collection of category resources
-            return CategoryResource::collection($categorys);
+            return CategoryResource::collection($categories);
         } catch (\Exception $e) {
             // Something went wrong
             Log::error("Error during category list fetch. " . $e->getMessage());
@@ -62,8 +62,6 @@ class CategoryController extends Controller
         try {
             // Retrieve the category from the repository
             $category = $this->categoryRepository->findByUuid($uuid);
-            // Load the related models (unit, organization, category)
-            $category->load('unit', 'category', 'organization');
             // Return the category resource
             return new CategoryResource($category);
         } catch (ModelNotFoundException $e) {
@@ -90,8 +88,6 @@ class CategoryController extends Controller
             $data = $request->validated();
             // Create the category
             $category = $this->categoryRepository->create($data);
-            // Load the related models (unit, organization, category)
-            $category->load('unit', 'category', 'organization');
             // Return the category resource
             return new CategoryResource($category);
         } catch (\Exception $e) {
@@ -117,9 +113,6 @@ class CategoryController extends Controller
 
             // Update the category
             $category = $this->categoryRepository->update($uuid, $data);
-
-            // Load the related models (unit, organization, category)
-            $category->load('unit', 'category', 'organization');
 
             // Return the category resource
             return new CategoryResource($category);

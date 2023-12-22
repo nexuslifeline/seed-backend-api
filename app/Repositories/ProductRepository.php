@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Product;
+use App\Utils\Constants;
 use Illuminate\Support\Facades\Log;
 
 class ProductRepository implements ProductRepositoryInterface
@@ -90,7 +91,7 @@ class ProductRepository implements ProductRepositoryInterface
      * @throws Some_Exception_Class Description of exception.
      * @return \Illuminate\Contracts\Pagination\Paginator The paginated results.
      */
-    public function paginate(?int $perPage = 25)
+    public function paginate(?int $perPage = Constants::DEFAULT_PER_PAGE)
     {
         return Product::with(['unit:id,uuid,name', 'category:id,uuid,name'])->paginate($perPage);
     }
@@ -103,7 +104,7 @@ class ProductRepository implements ProductRepositoryInterface
      * @throws Some_Exception_Class A description of the exception that may be thrown.
      * @return Some_Return_Value A description of the return value.
      */
-    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage = 25)
+    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage = Constants::DEFAULT_PER_PAGE)
     {
         return Product::whereHas('organization', function ($q) use ($orgUuid) {
             $q->where('uuid', $orgUuid);

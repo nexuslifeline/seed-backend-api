@@ -91,8 +91,23 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @throws Some_Exception_Class Description of exception.
      * @return \Illuminate\Contracts\Pagination\Paginator The paginated results.
      */
-    public function paginate($perPage = Constants::DEFAULT_PER_PAGE)
+    public function paginate(?int $perPage = Constants::DEFAULT_PER_PAGE)
     {
         return Category::paginate($perPage);
+    }
+
+    /**
+     * Finds and paginates products by organization UUID.
+     *
+     * @param string $orgUuid The UUID of the organization.
+     * @param int|null $perPage The number of items per page. Default is 25.
+     * @throws Some_Exception_Class A description of the exception that can be thrown.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator The paginated products.
+     */
+    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage = Constants::DEFAULT_PER_PAGE)
+    {
+        return Category::whereHas('organization', function ($q) use ($orgUuid) {
+            $q->where('uuid', $orgUuid);
+        })->paginate($perPage);
     }
 }
