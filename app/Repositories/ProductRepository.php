@@ -80,11 +80,7 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function all()
     {
-        return Product::with(['unit' => function ($q) {
-            $q->select('id', 'uuid', 'name');
-        }, 'category' => function ($q) {
-            $q->select('id', 'uuid', 'name');
-        }])->get();
+        return Product::with(['unit:id,uuid,name', 'category:id,uuid,name'])->get();
     }
 
     /**
@@ -94,12 +90,25 @@ class ProductRepository implements ProductRepositoryInterface
      * @throws Some_Exception_Class Description of exception.
      * @return \Illuminate\Contracts\Pagination\Paginator The paginated results.
      */
-    public function paginate($perPage = 25)
+    public function paginate(?int $perPage = 25)
     {
-        return Product::with(['unit' => function ($q) {
-            $q->select('id', 'uuid', 'name');
-        }, 'category' => function ($q) {
-            $q->select('id', 'uuid', 'name');
-        }])->paginate($perPage);
+        return Product::with(['unit:id,uuid,name', 'category:id,uuid,name'])->paginate($perPage);
+    }
+
+    /**
+     * Find records by organization UUID.
+     *
+     * @param string $orgUuid The UUID of the organization.
+     * @param int $perPage The number of records to return per page.
+     * @throws Some_Exception_Class A description of the exception that may be thrown.
+     * @return Some_Return_Value A description of the return value.
+     */
+    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage = 25)
+    {
+        return Product::whereHas('organization', function ($q) use ($orgUuid) {
+            $q->where('uuid', $orgUuid);
+        })
+            ->with(['unit:id,uuid,name', 'category:id,uuid,name'])
+            ->paginate($perPage);
     }
 }

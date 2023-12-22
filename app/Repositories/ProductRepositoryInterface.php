@@ -12,11 +12,13 @@ interface ProductRepositoryInterface
 
     public function delete(string $uuid);
 
+    public function all();
+
+    public function paginate(?int $perPage);
+
     public function find(string $uuid);
 
     public function findByUuid(string $uuid);
 
-    public function all();
-
-    public function paginate(int $perPage);
+    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage);
 }

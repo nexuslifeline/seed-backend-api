@@ -34,13 +34,13 @@ class ProductController extends Controller
      * @throws \Exception If an error occurs during the product list fetch.
      * @return \App\Http\Resources\ProductResource A collection of product resources.
      */
-    public function index(Request $request)
+    public function index(Request $request, string $orgUuid)
     {
         try {
             // Retrieve the per_page parameter from the request
             $perPage = $request->input('per_page');
             // Retrieve the products from the repository
-            $products = $this->productRepository->paginate($perPage);
+            $products = $this->productRepository->findByOrgUuidAndPaginate($orgUuid, $perPage);
             // Return a collection of product resources
             return ProductResource::collection($products);
         } catch (\Exception $e) {
