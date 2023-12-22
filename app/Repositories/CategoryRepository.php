@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Category;
+use App\Utils\Constants;
+use Illuminate\Support\Facades\Log;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -18,27 +20,33 @@ class CategoryRepository implements CategoryRepositoryInterface
         return Category::create($data);
     }
 
+
     /**
-     * Updates an Category category with the given data.
+     * Update a category by UUID.
      *
-     * @param Category $category The Category category to update.
-     * @param array $data The data to update the Category category with.
-     * @return Category The updated Category category.
+     * @param string $uuid The UUID of the category.
+     * @param array<mixed> $data The data to update the category with.
+     * @return \App\Models\Category The updated category.
      */
-    public function update(Category $category, array $data)
+    public function update(string $uuid, array $data)
     {
+        $category = $this->findByUuid($uuid);
         $category->update($data);
         return $category;
     }
 
+
     /**
-     * Deletes an category.
+     * Deletes a category by its UUID.
      *
-     * @param Category $category The category to delete.
-     * @throws Some_Exception_Class When an error occurs while deleting the category.
+     * @param string $uuid The UUID of the category to be deleted.
+     * @throws Some_Exception_Class If an error occurs while deleting the category.
+     * @return void
      */
-    public function delete(Category $category)
+    public function delete(string $uuid)
     {
+        Log::info('Deleting category with UUID: ' . $uuid);
+        $category = Category::where('uuid', $uuid)->firstOrFail();
         $category->delete();
     }
 
@@ -49,9 +57,21 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the category is not found.
      * @return \App\Models\Category The found category.
      */
-    public function find($id)
+    public function find(string $uuid)
     {
-        return Category::findOrFail($id);
+        return Category::where('uuid', $uuid)->firstOrFail();
+    }
+
+    /**
+     * Finds a category by its UUID.
+     *
+     * @param mixed $uuid The UUID of the category.
+     * @throws Illuminate\Database\Eloquent\ModelNotFoundException If no category is found.
+     * @return Category The Category model instance.
+     */
+    public function findByUuid(string $uuid)
+    {
+        return Category::where('uuid', $uuid)->firstOrFail();
     }
 
     /**
@@ -62,5 +82,17 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function all()
     {
         return Category::all();
+    }
+
+    /**
+     * Paginate the results of the query.
+     *
+     * @param int $perPage The number of items per page.
+     * @throws Some_Exception_Class Description of exception.
+     * @return \Illuminate\Contracts\Pagination\Paginator The paginated results.
+     */
+    public function paginate($perPage = Constants::DEFAULT_PER_PAGE)
+    {
+        return Category::paginate($perPage);
     }
 }

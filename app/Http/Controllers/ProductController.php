@@ -6,7 +6,6 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductResource;
 use App\Repositories\ProductRepositoryInterface;
-use App\Utils\Constants;
 use App\Utils\ErrorMessages;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -39,7 +38,7 @@ class ProductController extends Controller
     {
         try {
             // Retrieve the per_page parameter from the request
-            $perPage = $request->input('per_page', Constants::DEFAULT_PER_PAGE);
+            $perPage = $request->input('per_page');
             // Retrieve the products from the repository
             $products = $this->productRepository->paginate($perPage);
             // Return a collection of product resources

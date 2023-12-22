@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 
 /*
@@ -22,7 +23,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // Accessible only to authenticated users
-Route::group(['middleware' => ['auth:sanctum']], function() {
+Route::group(['middleware' => ['auth:sanctum']], function () {
     // Returns the currently authenticated user
     Route::get('/me', function (Request $request) {
         return $request->user();
@@ -37,5 +38,11 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         ])->parameters([
             'products' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:Product');
+
+        Route::apiResource('/categories', CategoryController::class)->only([
+            'index', 'show', 'store', 'update', 'destroy'
+        ])->parameters([
+            'categories' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
+        ])->middleware('belongs.to.organization:Category');
     });
-  });
+});

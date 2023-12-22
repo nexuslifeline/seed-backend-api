@@ -56,9 +56,9 @@ class ProductRepository implements ProductRepositoryInterface
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the product is not found.
      * @return \App\Models\Product The found product.
      */
-    public function find($id)
+    public function find(string $uuid)
     {
-        return Product::findOrFail($id);
+        return Product::where('uuid', $uuid)->firstOrFail();
     }
 
     /**
