@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Unit;
+use App\Utils\Constants;
+use Illuminate\Support\Facades\Log;
 
 class UnitRepository implements UnitRepositoryInterface
 {
@@ -18,27 +20,33 @@ class UnitRepository implements UnitRepositoryInterface
         return Unit::create($data);
     }
 
+
     /**
-     * Updates an Unit with the given data.
+     * Update a unit by UUID.
      *
-     * @param Unit $unit The Unit to update.
-     * @param array $data The data to update the Unit with.
-     * @return Unit The updated Unit.
+     * @param string $uuid The UUID of the unit.
+     * @param array<mixed> $data The data to update the unit with.
+     * @return \App\Models\Unit The updated unit.
      */
-    public function update(Unit $unit, array $data)
+    public function update(string $uuid, array $data)
     {
+        $unit = $this->findByUuid($uuid);
         $unit->update($data);
         return $unit;
     }
 
+
     /**
-     * Deletes an unit.
+     * Deletes a unit by its UUID.
      *
-     * @param Unit $unit The unit to delete.
-     * @throws Some_Exception_Class When an error occurs while deleting the unit.
+     * @param string $uuid The UUID of the unit to be deleted.
+     * @throws Some_Exception_Class If an error occurs while deleting the unit.
+     * @return void
      */
-    public function delete(Unit $unit)
+    public function delete(string $uuid)
     {
+        Log::info('Deleting unit with UUID: ' . $uuid);
+        $unit = Unit::where('uuid', $uuid)->firstOrFail();
         $unit->delete();
     }
 
@@ -49,9 +57,21 @@ class UnitRepository implements UnitRepositoryInterface
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the unit is not found.
      * @return \App\Models\Unit The found unit.
      */
-    public function find($id)
+    public function find(string $uuid)
     {
-        return Unit::findOrFail($id);
+        return Unit::where('uuid', $uuid)->firstOrFail();
+    }
+
+    /**
+     * Finds a unit by its UUID.
+     *
+     * @param mixed $uuid The UUID of the unit.
+     * @throws Illuminate\Database\Eloquent\ModelNotFoundException If no unit is found.
+     * @return Unit The Unit model instance.
+     */
+    public function findByUuid(string $uuid)
+    {
+        return Unit::where('uuid', $uuid)->firstOrFail();
     }
 
     /**
@@ -62,5 +82,32 @@ class UnitRepository implements UnitRepositoryInterface
     public function all()
     {
         return Unit::all();
+    }
+
+    /**
+     * Paginate the results of the query.
+     *
+     * @param int $perPage The number of items per page.
+     * @throws Some_Exception_Class Description of exception.
+     * @return \Illuminate\Contracts\Pagination\Paginator The paginated results.
+     */
+    public function paginate(?int $perPage = Constants::DEFAULT_PER_PAGE)
+    {
+        return Unit::paginate($perPage);
+    }
+
+    /**
+     * Finds and paginates products by organization UUID.
+     *
+     * @param string $orgUuid The UUID of the organization.
+     * @param int|null $perPage The number of items per page. Default is 25.
+     * @throws Some_Exception_Class A description of the exception that can be thrown.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator The paginated products.
+     */
+    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage = Constants::DEFAULT_PER_PAGE)
+    {
+        return Unit::whereHas('organization', function ($q) use ($orgUuid) {
+            $q->where('uuid', $orgUuid);
+        })->paginate($perPage);
     }
 }

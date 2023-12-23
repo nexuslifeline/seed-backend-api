@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,16 +34,25 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Accesssible only to users in the organization
     Route::prefix('organizations/{orgUuid}')->middleware('user.in.organization')->group(function () {
+        // Products endpoints
         Route::apiResource('/products', ProductController::class)->only([
             'index', 'show', 'store', 'update', 'destroy'
         ])->parameters([
             'products' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:Product');
 
+        // Categories endpoints
         Route::apiResource('/categories', CategoryController::class)->only([
             'index', 'show', 'store', 'update', 'destroy'
         ])->parameters([
             'categories' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:Category');
+
+        // Units endpoints
+        Route::apiResource('/units', UnitController::class)->only([
+            'index', 'show', 'store', 'update', 'destroy'
+        ])->parameters([
+            'units' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
+        ])->middleware('belongs.to.organization:Unit');
     });
 });
