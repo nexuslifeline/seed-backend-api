@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Customer;
+use App\Utils\Constants;
+use Illuminate\Support\Facades\Log;
 
 class CustomerRepository implements CustomerRepositoryInterface
 {
@@ -18,40 +20,58 @@ class CustomerRepository implements CustomerRepositoryInterface
         return Customer::create($data);
     }
 
+
     /**
-     * Updates an Customer with the given data.
+     * Update a category by UUID.
      *
-     * @param Customer $customer The Customer to update.
-     * @param array $data The data to update the Customer with.
-     * @return Customer The updated Customer.
+     * @param string $uuid The UUID of the category.
+     * @param array<mixed> $data The data to update the category with.
+     * @return \App\Models\Customer The updated category.
      */
-    public function update(Customer $customer, array $data)
+    public function update(string $uuid, array $data)
     {
-        $customer->update($data);
-        return $customer;
+        $category = $this->findByUuid($uuid);
+        $category->update($data);
+        return $category;
+    }
+
+
+    /**
+     * Deletes a category by its UUID.
+     *
+     * @param string $uuid The UUID of the category to be deleted.
+     * @throws Some_Exception_Class If an error occurs while deleting the category.
+     * @return void
+     */
+    public function delete(string $uuid)
+    {
+        Log::info('Deleting category with UUID: ' . $uuid);
+        $category = Customer::where('uuid', $uuid)->firstOrFail();
+        $category->delete();
     }
 
     /**
-     * Deletes an customer.
-     *
-     * @param Customer $customer The customer to delete.
-     * @throws Some_Exception_Class When an error occurs while deleting the customer.
-     */
-    public function delete(Customer $customer)
-    {
-        $customer->delete();
-    }
-
-    /**
-     * Finds an customer by ID.
+     * Finds an category by ID.
      *
      * @param int $id The ID of the admin to find.
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the customer is not found.
-     * @return \App\Models\Customer The found customer.
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the category is not found.
+     * @return \App\Models\Customer The found category.
      */
-    public function find($id)
+    public function find(string $uuid)
     {
-        return Customer::findOrFail($id);
+        return Customer::where('uuid', $uuid)->firstOrFail();
+    }
+
+    /**
+     * Finds a category by its UUID.
+     *
+     * @param mixed $uuid The UUID of the category.
+     * @throws Illuminate\Database\Eloquent\ModelNotFoundException If no category is found.
+     * @return Customer The Customer model instance.
+     */
+    public function findByUuid(string $uuid)
+    {
+        return Customer::where('uuid', $uuid)->firstOrFail();
     }
 
     /**
@@ -62,5 +82,32 @@ class CustomerRepository implements CustomerRepositoryInterface
     public function all()
     {
         return Customer::all();
+    }
+
+    /**
+     * Paginate the results of the query.
+     *
+     * @param int $perPage The number of items per page.
+     * @throws Some_Exception_Class Description of exception.
+     * @return \Illuminate\Contracts\Pagination\Paginator The paginated results.
+     */
+    public function paginate(?int $perPage = Constants::DEFAULT_PER_PAGE)
+    {
+        return Customer::paginate($perPage);
+    }
+
+    /**
+     * Finds and paginates products by organization UUID.
+     *
+     * @param string $orgUuid The UUID of the organization.
+     * @param int|null $perPage The number of items per page. Default is 25.
+     * @throws Some_Exception_Class A description of the exception that can be thrown.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator The paginated products.
+     */
+    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage = Constants::DEFAULT_PER_PAGE)
+    {
+        return Customer::whereHas('organization', function ($q) use ($orgUuid) {
+            $q->where('uuid', $orgUuid);
+        })->paginate($perPage);
     }
 }

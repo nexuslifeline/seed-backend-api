@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UnitController;
 
@@ -54,5 +55,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         ])->parameters([
             'units' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:Unit');
+
+        // Customers endpoints
+        Route::apiResource('/customers', CustomerController::class)->only([
+            'index', 'show', 'store', 'update', 'destroy'
+        ])->parameters([
+            'customers' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
+        ])->middleware('belongs.to.organization:Customer');
     });
 });
