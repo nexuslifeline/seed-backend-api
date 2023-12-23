@@ -20,4 +20,9 @@ class Invoice extends BaseModel
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 }

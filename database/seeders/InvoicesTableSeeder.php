@@ -18,22 +18,22 @@ class InvoicesTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 75) as $index) {
+        foreach (range(1, 50) as $index) {
             $invoiceDate = $faker->date;
 
-            $customerId = DB::table('customers')
-                    ->inRandomOrder()
-                    ->pluck('id')
-                    ->first();
+            $customer = DB::table('customers')
+                ->inRandomOrder()
+                ->select('id', 'organization_id')
+                ->first();
 
             $invoiceId = DB::table('invoices')->insertGetId([
                 'uuid' => Str::uuid(),
-                'invoice_number' => $faker->unique()->randomNumber(6),
-                'customer_id' => $customerId,
+                'invoice_no' => $faker->unique()->randomNumber(6),
+                'customer_id' => $customer->id,
+                'organization_id' => $customer->organization_id,
                 'invoice_date' => $invoiceDate,
                 'due_date' => date('Y-m-d', strtotime($invoiceDate . ' +30 days')),
                 'total_amount' => $faker->randomFloat(2, 50, 500),
-                // Add any other relevant invoice fields
             ]);
 
 

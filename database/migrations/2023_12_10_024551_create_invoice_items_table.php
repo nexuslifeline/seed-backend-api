@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('quantity')->nullable();
             $table->decimal('unit_price', 10, 2)->nullable()->default(0.00);
             $table->decimal('line_total', 10, 2)->nullable()->default(0.00);
-            $table->timestamps();
+            // $table->timestamps();
         });
     }
 

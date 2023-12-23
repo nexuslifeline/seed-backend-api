@@ -14,15 +14,19 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->index();
+            $table->string('invoice_no')->nullable();
 
             // Foreign key relationship with the customers table
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
 
+            $table->unsignedBigInteger('organization_id');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+
             $table->date('invoice_date')->nullable();
             $table->date('due_date')->nullable();
             $table->decimal('total_amount', 10, 2)->nullable()->default(0.00);
-            $table->enum('status', ['draft', 'sent', 'paid'])->default('draft');
+            $table->enum('status', ['draft', 'sent', 'paid', 'overdue'])->default('draft');
 
             $table->string('description')->nullable();
 
