@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\OrgFillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Customer extends BaseModel
 {
-    use HasFactory;
+    use OrgFillable;
 
     public function organization(): BelongsTo
     {

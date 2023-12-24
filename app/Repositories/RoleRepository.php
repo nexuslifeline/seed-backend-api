@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Role;
+use App\Utils\Constants;
+use Illuminate\Support\Facades\Log;
 
 class RoleRepository implements RoleRepositoryInterface
 {
@@ -18,27 +20,33 @@ class RoleRepository implements RoleRepositoryInterface
         return Role::create($data);
     }
 
+
     /**
-     * Updates an Role with the given data.
+     * Update a role by UUID.
      *
-     * @param Role $role The Role to update.
-     * @param array $data The data to update the Role with.
-     * @return Role The updated Role.
+     * @param string $uuid The UUID of the role.
+     * @param array<mixed> $data The data to update the role with.
+     * @return \App\Models\Role The updated role.
      */
-    public function update(Role $role, array $data)
+    public function update(string $uuid, array $data)
     {
+        $role = $this->findByUuid($uuid);
         $role->update($data);
         return $role;
     }
 
+
     /**
-     * Deletes an role.
+     * Deletes a role by its UUID.
      *
-     * @param Role $role The role to delete.
-     * @throws Some_Exception_Class When an error occurs while deleting the role.
+     * @param string $uuid The UUID of the role to be deleted.
+     * @throws Some_Exception_Class If an error occurs while deleting the role.
+     * @return void
      */
-    public function delete(Role $role)
+    public function delete(string $uuid)
     {
+        Log::info('Deleting role with UUID: ' . $uuid);
+        $role = Role::where('uuid', $uuid)->firstOrFail();
         $role->delete();
     }
 
@@ -49,9 +57,21 @@ class RoleRepository implements RoleRepositoryInterface
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the role is not found.
      * @return \App\Models\Role The found role.
      */
-    public function find($id)
+    public function find(string $uuid)
     {
-        return Role::findOrFail($id);
+        return Role::where('uuid', $uuid)->firstOrFail();
+    }
+
+    /**
+     * Finds a role by its UUID.
+     *
+     * @param mixed $uuid The UUID of the role.
+     * @throws Illuminate\Database\Eloquent\ModelNotFoundException If no role is found.
+     * @return Role The Role model instance.
+     */
+    public function findByUuid(string $uuid)
+    {
+        return Role::where('uuid', $uuid)->firstOrFail();
     }
 
     /**
@@ -62,5 +82,32 @@ class RoleRepository implements RoleRepositoryInterface
     public function all()
     {
         return Role::all();
+    }
+
+    /**
+     * Paginate the results of the query.
+     *
+     * @param int $perPage The number of items per page.
+     * @throws Some_Exception_Class Description of exception.
+     * @return \Illuminate\Contracts\Pagination\Paginator The paginated results.
+     */
+    public function paginate(?int $perPage = Constants::DEFAULT_PER_PAGE)
+    {
+        return Role::paginate($perPage);
+    }
+
+    /**
+     * Finds and paginates products by role UUID.
+     *
+     * @param string $orgUuid The UUID of the role.
+     * @param int|null $perPage The number of items per page. Default is 25.
+     * @throws Some_Exception_Class A description of the exception that can be thrown.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator The paginated products.
+     */
+    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage = Constants::DEFAULT_PER_PAGE)
+    {
+        return Role::whereHas('role', function ($q) use ($orgUuid) {
+            $q->where('uuid', $orgUuid);
+        })->paginate($perPage);
     }
 }

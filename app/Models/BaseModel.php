@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Traits\Auditable;
-use App\Traits\OrgFillable;
 use App\Traits\UuidGenerator;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BaseModel extends Model
 {
-    use Auditable, UuidGenerator, OrgFillable, SoftDeletes;
+    use HasFactory, SoftDeletes, UuidGenerator, Auditable;
 
     protected $guarded = ['id', 'uuid'];
 

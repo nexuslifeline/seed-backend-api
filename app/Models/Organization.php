@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
+use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Organization extends BaseModel
 {
-    use HasFactory;
-
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);

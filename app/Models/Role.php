@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends BaseModel
 {
-    use HasFactory;
-
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);

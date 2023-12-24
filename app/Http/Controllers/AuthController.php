@@ -12,6 +12,7 @@ use App\Repositories\RoleRepositoryInterface;
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -49,7 +50,8 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\Response the HTTP response containing the user data and token
      */
-    public function register(RegisterUserRequest $request) {
+    public function register(RegisterUserRequest $request)
+    {
         try {
             // Validate the request
             $fields = $request->validated();
@@ -69,6 +71,7 @@ class AuthController extends Controller
                 'name' => $fields['organization'],
             ]);
 
+            // Create a new role
             $role = $this->roleRepository->create([
                 'name' => self::INITIAL_USER_ORGANIZATION_ROLE,
                 'organization_id' => $organization->id
@@ -93,7 +96,7 @@ class AuthController extends Controller
             return response($response, 201);
         } catch (\Exception $e) {
             // Handle the exception, log it, or return an appropriate error response
-            return response(['message' => 'Error creating user.' . $e->getMessage()], 500);
+            return response(['message' => 'Error creating user. ' . $e->getMessage()], 500);
         }
     }
 
@@ -104,7 +107,8 @@ class AuthController extends Controller
      * @throws None
      * @return Response The response containing the user and token.
      */
-    public function login(LoginUserRequest $request) {
+    public function login(LoginUserRequest $request)
+    {
         try {
             // Validate the request fields
             $fields = $request->validated();
@@ -146,7 +150,6 @@ class AuthController extends Controller
             // Handle the exception, log it, or return an appropriate error response
             return response(['message' => 'Error logging in user.'], 500);
         }
-
     }
 
     /**
@@ -156,7 +159,8 @@ class AuthController extends Controller
      * @throws None
      * @return \Illuminate\Http\Response The HTTP response containing a message.
      */
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         try {
             // Delete the current token
             $request->user()->currentAccessToken()->delete();
@@ -167,6 +171,5 @@ class AuthController extends Controller
             // Handle the exception, log it, or return an appropriate error response
             return response(['message' => 'Error logging out user.'], 500);
         }
-
     }
 }

@@ -39,10 +39,10 @@ class CustomerController extends Controller
         try {
             // Retrieve the per_page parameter from the request
             $perPage = $request->input('per_page');
-            // Retrieve the categories from the repository
-            $categories = $this->customerRepository->findByOrgUuidAndPaginate($orgUuid, $perPage);
+            // Retrieve the customers from the repository
+            $customers = $this->customerRepository->findByOrgUuidAndPaginate($orgUuid, $perPage);
             // Return a collection of customer resources
-            return CustomerResource::collection($categories);
+            return CustomerResource::collection($customers);
         } catch (\Exception $e) {
             // Something went wrong
             Log::error("Error during customer list fetch. " . $e->getMessage());

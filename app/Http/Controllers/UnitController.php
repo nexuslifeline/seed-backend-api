@@ -39,10 +39,10 @@ class UnitController extends Controller
         try {
             // Retrieve the per_page parameter from the request
             $perPage = $request->input('per_page');
-            // Retrieve the categories from the repository
-            $categories = $this->unitRepository->findByOrgUuidAndPaginate($orgUuid, $perPage);
+            // Retrieve the units from the repository
+            $units = $this->unitRepository->findByOrgUuidAndPaginate($orgUuid, $perPage);
             // Return a collection of unit resources
-            return UnitResource::collection($categories);
+            return UnitResource::collection($units);
         } catch (\Exception $e) {
             // Something went wrong
             Log::error("Error during unit list fetch. " . $e->getMessage());
