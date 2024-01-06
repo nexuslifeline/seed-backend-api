@@ -2,11 +2,12 @@
 
 namespace App\Rules;
 
-use App\Models\Customer;
+use App\Models\Product;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
-class CustomerBelongsToOrganization implements ValidationRule
+class ProductBelongsToOrganization implements ValidationRule
 {
     protected $orgUuid;
     /**
@@ -20,24 +21,23 @@ class CustomerBelongsToOrganization implements ValidationRule
     }
 
     /**
-     * Validates a given attribute value against the customer's organization UUID.
+     * Validates a given attribute value against the product's organization UUID.
      *
      * @param string $attribute The name of the attribute being validated.
      * @param mixed $value The value of the attribute being validated.
      * @param Closure $fail The closure to be called if the validation fails.
-     * @throws Exception If the customer does not belong to the organization.
+     * @throws Exception If the product does not belong to the organization.
      * @return void
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        // TODO: use repository pattern to load the customer
-        // Find the customer by UUID using the customer repository
-        $customer = Customer::with('organization')->find($value);
-
-        // Check if the customer's organization UUID is not equal to the organization UUID provided
-        if (!$this->orgUuid || !$customer || !$customer->organization || $customer->organization->uuid !== $this->orgUuid) {
+        // TODO: use repository pattern to load the product
+        // Find the product by UUID using the product repository
+        $product = Product::with('organization')->find($value);
+        // Check if the product's organization UUID is not equal to the organization UUID provided
+        if (!$this->orgUuid || !$product || !$product->organization || $product->organization->uuid !== $this->orgUuid) {
             // Call the fail closure with a message if the validation fails
-            $fail('The customer does not belong to the organization.');
+            $fail('The product does not belong to the organization.');
         }
     }
 }

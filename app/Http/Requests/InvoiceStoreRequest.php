@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Repositories\CustomerRepository;
 use App\Repositories\CustomerRepositoryInterface;
 use App\Rules\CustomerBelongsToOrganization;
+use App\Rules\ProductBelongsToOrganization;
 use Carbon\Carbon;
 
 class InvoiceStoreRequest extends BaseFormRequest
@@ -38,7 +39,11 @@ class InvoiceStoreRequest extends BaseFormRequest
             // The 'total_amount' field is required, must be numeric, and must be greater than or equal to 0
             'total_amount' => 'required|numeric|min:0',
 
-            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.product_id' => [
+                'required',
+                'exists:products,id',
+                new ProductBelongsToOrganization($this->route('orgUuid'))
+            ],
             'items.*.quantity' => 'required|numeric|min:0',
             'items.*.unit_price' => 'required|numeric|min:0',
             'items.*.line_total' => 'required|numeric|min:0',
