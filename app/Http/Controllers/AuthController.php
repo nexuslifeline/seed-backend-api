@@ -54,7 +54,7 @@ class AuthController extends Controller
     {
         try {
             // Validate the request
-            $fields = $request->validated();
+            $fields = $request->all();
 
             // Start a database transaction
             DB::beginTransaction();
@@ -111,7 +111,7 @@ class AuthController extends Controller
     {
         try {
             // Validate the request fields
-            $fields = $request->validated();
+            $fields = $request->all();
 
             // Set the invalid message
             $invalidMessage = 'Invalid email or password. Please try again.';

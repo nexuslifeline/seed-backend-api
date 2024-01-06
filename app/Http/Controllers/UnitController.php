@@ -85,7 +85,7 @@ class UnitController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->validated();
+            $data = $request->all();
             // Create the unit
             $unit = $this->unitRepository->create($data);
             // Return the unit resource
@@ -109,7 +109,7 @@ class UnitController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->validated();
+            $data = $request->all();
 
             // Update the unit
             $unit = $this->unitRepository->update($uuid, $data);

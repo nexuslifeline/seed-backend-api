@@ -85,7 +85,7 @@ class CustomerController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->validated();
+            $data = $request->all();
             // Create the customer
             $customer = $this->customerRepository->create($data);
             // Return the customer resource
@@ -109,7 +109,7 @@ class CustomerController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->validated();
+            $data = $request->all();
 
             // Update the customer
             $customer = $this->customerRepository->update($uuid, $data);

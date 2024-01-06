@@ -85,7 +85,7 @@ class CategoryController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->validated();
+            $data = $request->all();
             // Create the category
             $category = $this->categoryRepository->create($data);
             // Return the category resource
@@ -109,7 +109,7 @@ class CategoryController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->validated();
+            $data = $request->all();
 
             // Update the category
             $category = $this->categoryRepository->update($uuid, $data);

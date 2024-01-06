@@ -91,7 +91,7 @@ class ProductController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->validated();
+            $data = $request->all();
             // Create the product
             $product = $this->productRepository->create($data);
             // Load the related models (unit, organization, category)
@@ -121,7 +121,7 @@ class ProductController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->validated();
+            $data = $request->all();
 
             // Update the product
             $product = $this->productRepository->update($uuid, $data);

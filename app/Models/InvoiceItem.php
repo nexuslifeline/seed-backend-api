@@ -11,6 +11,8 @@ class InvoiceItem extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+    // Disable the 'updated_at', 'deleted_at' and 'created_at' timestamp for this model
+    public $timestamps = false;
 
     public function invoice(): BelongsTo
     {
