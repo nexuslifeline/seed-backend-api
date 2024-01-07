@@ -14,7 +14,9 @@ interface UserRepositoryInterface
 
     public function find($id);
 
-    public function findByEmail($email);
+    public function findByEmail(string $email);
+
+    public function findByVerificationToken(string $token);
 
     public function all();
 }

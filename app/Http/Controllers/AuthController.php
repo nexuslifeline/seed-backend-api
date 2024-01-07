@@ -65,7 +65,7 @@ class AuthController extends Controller
             $user = $this->userRepository->create([
                 'name' => $fields['name'],
                 'email' => $fields['email'],
-                'password' => bcrypt($fields['password'])
+                'password' => bcrypt($fields['password']),
             ]);
 
             // Create a new organization

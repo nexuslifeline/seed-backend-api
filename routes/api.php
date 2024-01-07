@@ -8,6 +8,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +26,17 @@ Route::post('/register', [AuthController::class, 'register']);
 // Logs in a user
 Route::post('/login', [AuthController::class, 'login']);
 
+
+// Account Verification Routes
+Route::get('/email/verify/{token}', [VerificationController::class, 'verify'])
+    ->where('token', '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$')
+    ->name('verification.verify');
+
 // Accessible only to authenticated users
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    // Account Verification Routes
+    Route::get('/email/verify/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+
     // Returns the currently authenticated user
     Route::get('/me', function (Request $request) {
         return $request->user();

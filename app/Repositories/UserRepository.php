@@ -67,6 +67,20 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * Find a user by verification token.
+     *
+     * @param  string  $token  The verification token to search for.
+     * @return User|null       The user found, or null if not found.
+     */
+    public function findByVerificationToken(string $token)
+    {
+        // Use the User model to query the database and find the first record
+        // where the verification_token column matches the given token.
+        // Return the user found, or null if no user is found.
+        return User::where('verification_token', $token)->first();
+    }
+
+    /**
      * Retrieves all records from the database.
      *
      * @return \Illuminate\Database\Eloquent\Collection
