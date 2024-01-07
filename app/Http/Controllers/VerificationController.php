@@ -27,20 +27,14 @@ class VerificationController extends Controller
             // Find the user with the given token
             $user = $this->userRepository->findByVerificationToken($token);
 
-            // If the user is not found, return a response with an error message and status code 401
+            // If the user is not found, return a response with an error message and status code 403
             if (!$user) {
-                return response([
-                    'success' => false,
-                    'message' => "Invalid verification token."
-                ], 422);
+                return response()->json(['error' => 'Invalid token.'], 403);
             }
 
             // Check if the user's email is already verified
             if ($user->email_verified_at) {
-                return response([
-                    'success' => false,
-                    'message' => "User is already verified.",
-                ], 422);
+                return response()->json(['error' => 'User is already verified.'], 403);
             }
 
             // Mark the user's email as verified
@@ -48,7 +42,6 @@ class VerificationController extends Controller
 
             // Return a response with a success message
             return response([
-                'success' => true,
                 'message' => "Your email has been verified."
             ]);
         } catch (\Exception $e) {
@@ -73,10 +66,7 @@ class VerificationController extends Controller
             // Check if the user's email is already verified
             if ($user->email_verified_at) {
                 // Return a response indicating that the user is already verified
-                return response([
-                    'success' => false,
-                    'message' => "User is already verified.",
-                ], 422);
+                return response()->json(['error' => 'User is already verified.'], 403);
             }
 
             // Generate a new verification token using a UUID (Universally Unique Identifier)
@@ -90,7 +80,6 @@ class VerificationController extends Controller
 
             // Return a response indicating that the verification email has been sent
             return response([
-                'success' => true,
                 'message' => "Verification email sent."
             ], 200);
         } catch (\Exception $e) {
