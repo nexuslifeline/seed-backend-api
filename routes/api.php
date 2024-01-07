@@ -45,7 +45,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',   [AuthController::class, 'logout']);
 
     // Accesssible only to users in the organization
-    Route::prefix('organizations/{orgUuid}')->middleware('user.in.organization')->group(function () {
+    Route::prefix('organizations/{orgUuid}')->middleware([
+        'user.in.organization', 'email.verified'
+    ])->group(function () {
         // Products endpoints
         Route::apiResource('/products', ProductController::class)->parameters([
             'products' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
