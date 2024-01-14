@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\VerificationController;
 
@@ -25,6 +26,10 @@ use App\Http\Controllers\VerificationController;
 Route::post('/register', [AuthController::class, 'register']);
 // Logs in a user
 Route::post('/login', [AuthController::class, 'login']);
+
+// Forgot Password Routes
+Route::post('/password/send-reset-link', [ResetPasswordController::class, 'sendResetLinkEmail']);
+Route::post('/password/reset', [ResetPasswordController::class, 'resetPassword']);
 
 
 // Account Verification Routes

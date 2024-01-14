@@ -11,7 +11,7 @@
     <p>We hope this message finds you well. You are receiving this email because a password reset was requested for your account at <b>Seed Invoice App</b>.</p>
     <p>
         Click the following link to reset your password:
-        <p><a href="https://app.seedinvoice.com/reset-password?token={{ $resetToken }}">Reset Password</a></p>
+        <p><a href="https://app.seedinvoice.com/reset-password?token={{ $resetToken }}&email={{ $user->email }}">Reset Password</a></p>
     </p>
     <p>
         If you did not request a password reset, no further action is required.
