@@ -28,6 +28,10 @@ return new class extends Migration
 
             $table->date('issue_date')->nullable();
             $table->date('due_date')->nullable();
+            $table->enum('discount_type', ['flat', 'percentage'])->default('flat');
+            $table->decimal('discount_amount', 10, 2)->nullable()->default(0.00);
+            $table->decimal('discount_rate', 10, 2)->nullable()->default(0.00);
+
             $table->decimal('total_amount', 10, 2)->nullable()->default(0.00);
             $table->enum('status', ['draft', 'sent', 'paid', 'overdue'])->default('draft');
             $table->text('bill_to')->nullable();

@@ -21,8 +21,13 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
 
+            $table->enum('discount_type', ['flat', 'percentage'])->default('flat');
+            $table->decimal('discount_amount', 10, 2)->nullable()->default(0.00);
+            $table->decimal('discount_rate', 10, 2)->nullable()->default(0.00);
+
             $table->integer('quantity')->nullable();
             $table->decimal('unit_price', 10, 2)->nullable()->default(0.00);
+            $table->decimal('tax_total', 10, 2)->nullable()->default(0.00);
             $table->decimal('line_total', 10, 2)->nullable()->default(0.00);
             // $table->timestamps();
         });
