@@ -31,7 +31,7 @@ class InvoicesTableSeeder extends Seeder
                 'invoice_no' => $faker->unique()->randomNumber(6),
                 'customer_id' => $customer->id,
                 'organization_id' => $customer->organization_id,
-                'invoice_date' => $invoiceDate,
+                'issue_date' => $invoiceDate,
                 'due_date' => date('Y-m-d', strtotime($invoiceDate . ' +30 days')),
                 'total_amount' => $faker->randomFloat(2, 50, 500),
             ]);

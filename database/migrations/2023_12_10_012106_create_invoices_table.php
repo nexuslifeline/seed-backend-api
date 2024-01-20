@@ -23,12 +23,18 @@ return new class extends Migration
             $table->unsignedBigInteger('organization_id');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
 
-            $table->date('invoice_date')->nullable();
+            $table->unsignedBigInteger('payment_term_id');
+            $table->foreign('payment_term_id')->references('id')->on('payment_terms')->onDelete('cascade');
+
+            $table->date('issue_date')->nullable();
             $table->date('due_date')->nullable();
             $table->decimal('total_amount', 10, 2)->nullable()->default(0.00);
             $table->enum('status', ['draft', 'sent', 'paid', 'overdue'])->default('draft');
-
-            $table->string('description')->nullable();
+            $table->text('bill_to')->nullable();
+            $table->text('bill_from')->nullable();
+            $table->text('ship_to')->nullable();
+            $table->text('terms_conditions')->nullable();
+            $table->text('notes')->nullable();
 
             $table->unsignedBigInteger('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');

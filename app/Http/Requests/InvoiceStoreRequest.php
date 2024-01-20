@@ -32,10 +32,10 @@ class InvoiceStoreRequest extends BaseFormRequest
                 'exists:customers,id',
                 new CustomerBelongsToOrganization($this->route('orgUuid')),
             ],
-            // The 'invoice_date' field is required and must be a valid date
-            'invoice_date' => 'required|date',
-            // The 'due_date' field is required, must be a valid date, and must be after or equal to the 'invoice_date' field
-            'due_date' => 'required|date|after_or_equal:invoice_date',
+            // The 'issue_date' field is required and must be a valid date
+            'issue_date' => 'required|date',
+            // The 'due_date' field is required, must be a valid date, and must be after or equal to the 'issue_date' field
+            'due_date' => 'required|date|after_or_equal:issue_date',
             // The 'total_amount' field is required, must be numeric, and must be greater than or equal to 0
             'total_amount' => 'required|numeric|min:0',
 
@@ -55,7 +55,7 @@ class InvoiceStoreRequest extends BaseFormRequest
      *
      * This method is responsible for preparing the data that needs to be validated
      * before it is passed to the validation rules. It performs the following steps:
-     * 1. It retrieves the 'invoice_date' input from the request and formats it using the 'formatDate' method.
+     * 1. It retrieves the 'issue_date' input from the request and formats it using the 'formatDate' method.
      * 2. It retrieves the 'due_date' input from the request and formats it using the 'formatDate' method.
      * 3. It merges the formatted dates back into the request data.
      *
@@ -63,11 +63,11 @@ class InvoiceStoreRequest extends BaseFormRequest
      */
     protected function prepareForValidation()
     {
-        $formattedInvoiceDate = $this->formatDate($this->input('invoice_date')); // Step 1
+        $formattedInvoiceDate = $this->formatDate($this->input('issue_date')); // Step 1
         $formattedDueDate = $this->formatDate($this->input('due_date')); // Step 2
 
         $this->merge([
-            'invoice_date' => $formattedInvoiceDate, // Step 3
+            'issue_date' => $formattedInvoiceDate, // Step 3
             'due_date' => $formattedDueDate, // Step 3
         ]);
     }
