@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\InvoiceSettingController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UnitController;
@@ -49,7 +50,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Logout the currently authenticated user
     Route::post('/logout',   [AuthController::class, 'logout']);
 
-    // Accesssible only to users in the organization
+    // Accesssible only to users in the organization and to verified users
     Route::prefix('organizations/{orgUuid}')->middleware([
         'user.in.organization', 'email.verified'
     ])->group(function () {
@@ -74,7 +75,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         ])->middleware('belongs.to.organization:Customer');
 
 
-        // Customers endpoints
+        // Invoices endpoints
+        Route::put('/invoices/{uuid}/update-setting', [InvoiceSettingController::class, 'update']);
         Route::apiResource('/invoices', InvoiceController::class)->parameters([
             'invoices' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:Invoice');

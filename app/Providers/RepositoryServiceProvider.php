@@ -10,6 +10,8 @@ use App\Repositories\InvoiceItemRepository;
 use App\Repositories\InvoiceItemRepositoryInterface;
 use App\Repositories\InvoiceRepository;
 use App\Repositories\InvoiceRepositoryInterface;
+use App\Repositories\InvoiceSettingRepository;
+use App\Repositories\InvoiceSettingRepositoryInterface;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\OrganizationRepositoryInterface;
 use App\Repositories\ProductRepository;
@@ -33,6 +35,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CustomerRepositoryInterface::class, CustomerRepository::class);
         $this->app->bind(InvoiceItemRepositoryInterface::class, InvoiceItemRepository::class);
         $this->app->bind(InvoiceRepositoryInterface::class, InvoiceRepository::class);
+        $this->app->bind(InvoiceSettingRepositoryInterface::class, InvoiceSettingRepository::class);
         $this->app->bind(OrganizationRepositoryInterface::class, OrganizationRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);

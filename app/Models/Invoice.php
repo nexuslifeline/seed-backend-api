@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\OrgFillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Invoice extends BaseModel
 {
@@ -23,5 +24,10 @@ class Invoice extends BaseModel
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
+    }
+
+    public function setting(): HasOne
+    {
+        return $this->hasOne(InvoiceSetting::class);
     }
 }
