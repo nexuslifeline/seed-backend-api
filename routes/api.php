@@ -76,7 +76,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
         // Invoices endpoints
-        Route::put('/invoices/{uuid}/update-setting', [InvoiceSettingController::class, 'update']);
+        Route::put('/invoices/{uuid}/update-setting', [InvoiceSettingController::class, 'update'])
+            ->middleware('belongs.to.organization:Invoice');
         Route::apiResource('/invoices', InvoiceController::class)->parameters([
             'invoices' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:Invoice');

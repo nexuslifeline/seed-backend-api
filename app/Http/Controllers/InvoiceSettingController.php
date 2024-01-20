@@ -20,9 +20,19 @@ class InvoiceSettingController extends Controller
     ) {
     }
 
+    /**
+     * Update the invoice setting with the given request data.
+     *
+     * @param Request $request The request data
+     * @param $orgUuid The organization UUID
+     * @param $uuid The invoice UUID
+     * @throws ModelNotFoundException If the invoice is not found
+     * @return InvoiceSettingResource The updated invoice setting resource
+     */
     public function update(Request $request, $orgUuid, $uuid)
     {
         try {
+            // Find the invoice
             $invoiceId = $this->invoiceRepository->findByUuid($uuid)->id;
 
             // Use updateOrCreate to either update the existing record or create a new one
@@ -31,6 +41,7 @@ class InvoiceSettingController extends Controller
                 $request->all()
             );
 
+            $setting->refresh();
             return new InvoiceSettingResource($setting);
         } catch (ModelNotFoundException $e) {
             // Resource not found
