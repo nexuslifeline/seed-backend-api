@@ -10,6 +10,7 @@ use App\Http\Controllers\InvoiceSettingController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\PaymentTermController;
 use App\Http\Controllers\VerificationController;
 
 /*
@@ -74,12 +75,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             'customers' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:Customer');
 
-
         // Invoices endpoints
         Route::put('/invoices/{uuid}/update-setting', [InvoiceSettingController::class, 'update'])
             ->middleware('belongs.to.organization:Invoice');
         Route::apiResource('/invoices', InvoiceController::class)->parameters([
             'invoices' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:Invoice');
+
+        // Payment Terms endpoints
+        Route::apiResource('/payment-terms', PaymentTermController::class)->parameters([
+            'payment-terms' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
+        ])->middleware('belongs.to.organization:PaymentTerm');
     });
 });

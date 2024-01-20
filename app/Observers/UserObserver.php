@@ -49,6 +49,16 @@ class UserObserver
 
     public function created(User $user)
     {
+        $this->sendVerificationEmail($user);
+        $this->fillDefaultData($user);
+    }
+
+    private function fillDefaultData(User $user)
+    {
+    }
+
+    private function sendVerificationEmail(User $user)
+    {
         try {
             // Refresh the user instance
             $user->refresh();
@@ -77,7 +87,7 @@ class UserObserver
         }
     }
 
-
+    // TODO: check if we can just use the sendVerificationEmail method
     public function updated(User $user)
     {
         try {

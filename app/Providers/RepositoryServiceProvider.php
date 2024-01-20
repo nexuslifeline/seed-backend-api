@@ -14,6 +14,8 @@ use App\Repositories\InvoiceSettingRepository;
 use App\Repositories\InvoiceSettingRepositoryInterface;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\OrganizationRepositoryInterface;
+use App\Repositories\PaymentTermRepository;
+use App\Repositories\PaymentTermRepositoryInterface;
 use App\Repositories\ProductRepository;
 use App\Repositories\ProductRepositoryInterface;
 use App\Repositories\RoleRepository;
@@ -41,6 +43,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
         $this->app->bind(UnitRepositoryInterface::class, UnitRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(PaymentTermRepositoryInterface::class, PaymentTermRepository::class);
     }
 
     /**
