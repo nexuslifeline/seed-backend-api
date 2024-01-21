@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoice_item_taxes', function (Blueprint $table) {
+        Schema::create('product_taxes', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+
             $table->unsignedBigInteger('tax_type_id');
             $table->foreign('tax_type_id')->references('id')->on('tax_types')->onDelete('cascade');
+
             $table->decimal('tax_rate', 10, 2)->nullable()->default(0.00);
             $table->decimal('tax_amount', 10, 2)->nullable()->default(0.00);
-
-            $table->unsignedBigInteger('invoice_item_id');
-            $table->foreign('invoice_item_id')->references('id')->on('invoice_items')->onDelete('cascade');
         });
     }
 
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invoice_item_taxes');
+        Schema::dropIfExists('product_taxes');
     }
 };

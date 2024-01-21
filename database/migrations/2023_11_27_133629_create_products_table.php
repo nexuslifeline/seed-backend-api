@@ -16,7 +16,11 @@ return new class extends Migration
             $table->uuid('uuid')->index();
             $table->string('name')->nullable();
             $table->string('description')->nullable();
-            $table->decimal('price', 8, 2)->nullable()->default(0.00);
+            $table->boolean('is_tax_inclusive')->default(false);
+            $table->decimal('tax_total', 10, 2)->nullable()->default(0.00);
+            $table->decimal('pre_tax_price', 10, 2)->nullable()->default(0.00);
+            $table->decimal('price', 10, 2)->nullable()->default(0.00);
+            $table->integer('on_hand')->unsigned()->default(0);
 
             $table->unsignedBigInteger('unit_id');
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');

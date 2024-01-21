@@ -27,4 +27,9 @@ class Product extends BaseModel
     {
         return $this->hasMany(InvoiceItem::class);
     }
+
+    public function taxes(): HasMany
+    {
+        return $this->hasMany(ProductTax::class);
+    }
 }

@@ -32,7 +32,7 @@ return new class extends Migration
             $table->decimal('discount_amount', 10, 2)->nullable()->default(0.00);
             $table->decimal('discount_rate', 10, 2)->nullable()->default(0.00);
 
-            $table->decimal('tax_total', 10, 2)->default(0.00);
+            $table->decimal('tax_total', 10, 2)->nullable()->default(0.00);
 
             $table->decimal('total_amount', 10, 2)->nullable()->default(0.00);
             $table->enum('status', ['draft', 'sent', 'paid', 'overdue'])->default('draft');

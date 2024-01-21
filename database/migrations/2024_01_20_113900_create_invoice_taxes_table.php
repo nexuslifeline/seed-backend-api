@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('tax_type_id');
             $table->foreign('tax_type_id')->references('id')->on('tax_types')->onDelete('cascade');
-            $table->decimal('tax_rate', 10, 2)->default(0.00);
-            $table->decimal('tax_amount', 10, 2)->default(0.00);
+            $table->decimal('tax_rate', 10, 2)->nullable()->default(0.00);
+            $table->decimal('tax_amount', 10, 2)->nullable()->default(0.00);
 
             $table->unsignedBigInteger('invoice_id');
             $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');

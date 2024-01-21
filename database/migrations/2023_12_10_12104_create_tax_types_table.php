@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('uuid')->index();
             $table->string('name')->nullable();
             $table->string('description')->nullable();
-            $table->decimal('tax_rate', 10, 2)->default(0);
+            $table->decimal('tax_rate', 10, 2)->nullable()->default(0);
             $table->boolean('is_compound')->default(false);
 
             $table->unsignedBigInteger('organization_id');
