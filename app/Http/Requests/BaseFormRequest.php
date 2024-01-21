@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Arr;
 
 class BaseFormRequest extends FormRequest
 {
@@ -19,5 +20,4 @@ class BaseFormRequest extends FormRequest
     {
         return true;
     }
-
 }

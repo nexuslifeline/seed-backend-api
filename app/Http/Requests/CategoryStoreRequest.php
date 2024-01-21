@@ -21,6 +21,10 @@ class CategoryStoreRequest extends BaseFormRequest
      */
     public function rules(): array
     {
+        if ($this->has('validate') && !$this->input('validate')) {
+            return [];
+        }
+
         return [
             'name' => 'required|string|max:255',
         ];

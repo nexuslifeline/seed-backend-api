@@ -85,7 +85,7 @@ class CustomerController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->all();
+            $data = $request->except('validate');
             // Create the customer
             $customer = $this->customerRepository->create($data);
             // Return the customer resource

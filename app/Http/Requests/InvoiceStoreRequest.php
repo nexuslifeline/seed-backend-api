@@ -25,6 +25,10 @@ class InvoiceStoreRequest extends BaseFormRequest
      */
     public function rules(): array
     {
+        if ($this->has('validate') && !$this->input('validate')) {
+            return [];
+        }
+
         return [
             // The 'customer_id' field is required and must exist in the 'customers' table
             'customer_id' => [

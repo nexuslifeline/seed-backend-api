@@ -85,7 +85,7 @@ class UnitController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->all();
+            $data = $request->except('validate');
             // Create the unit
             $unit = $this->unitRepository->create($data);
             // Return the unit resource

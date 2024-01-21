@@ -92,7 +92,7 @@ class InvoiceController extends Controller
         // Log::info("Invoice creation request received.");
         try {
             // Validate the request and retrieve the data
-            $data = $request->all();
+            $data = $request->except('validate');
             // Create the invoice
             $invoice = $this->invoiceRepository->create($data);
 

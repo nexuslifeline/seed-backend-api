@@ -85,7 +85,7 @@ class CategoryController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->all();
+            $data = $request->except('validate');
             // Create the category
             $category = $this->categoryRepository->create($data);
             // Return the category resource

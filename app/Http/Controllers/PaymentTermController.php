@@ -85,7 +85,7 @@ class PaymentTermController extends Controller
     {
         try {
             // Validate the request and retrieve the data
-            $data = $request->all();
+            $data = $request->except('validate');
             // Create the paymentTerm
             $paymentTerm = $this->paymentTermRepository->create($data);
             // Return the paymentTerm resource
