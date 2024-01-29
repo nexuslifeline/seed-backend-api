@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class PaymentTermsSeeder extends Seeder
+class PaymentTermsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

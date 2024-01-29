@@ -21,6 +21,12 @@ class InvoicesTableSeeder extends Seeder
         foreach (range(1, 50) as $index) {
             $invoiceDate = $faker->date;
 
+
+            $paymentTermId = DB::table('payment_terms')
+                    ->inRandomOrder()
+                    ->pluck('id')
+                    ->first();
+
             $customer = DB::table('customers')
                 ->inRandomOrder()
                 ->select('id', 'organization_id')
@@ -34,6 +40,7 @@ class InvoicesTableSeeder extends Seeder
                 'issue_date' => $invoiceDate,
                 'due_date' => date('Y-m-d', strtotime($invoiceDate . ' +30 days')),
                 'total_amount' => $faker->randomFloat(2, 50, 500),
+                'payment_term_id' => $paymentTermId
             ]);
 
 
