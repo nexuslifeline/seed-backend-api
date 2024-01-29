@@ -21,4 +21,8 @@ interface ProductRepositoryInterface
     public function findByUuid(string $uuid);
 
     public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage);
+
+    public function uploadPhoto(string $uuid, $photo);
+
+    public function deletePhoto(string $uuid);
 }
