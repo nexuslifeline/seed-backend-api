@@ -13,4 +13,9 @@ class Customer extends BaseModel
     {
         return $this->belongsTo(Organization::class);
     }
+
+    public function photo(): BelongsTo
+    {
+        return $this->belongsTo(CustomerPhoto::class);
+    }
 }

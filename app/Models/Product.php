@@ -32,4 +32,9 @@ class Product extends BaseModel
     {
         return $this->hasMany(ProductTax::class);
     }
+
+    public function photo(): BelongsTo
+    {
+        return $this->belongsTo(ProductPhoto::class);
+    }
 }
