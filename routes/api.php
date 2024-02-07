@@ -12,6 +12,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\PaymentTermController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\VerificationController;
 
 /*
@@ -103,5 +105,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::apiResource('/payment-terms', PaymentTermController::class)->parameters([
             'payment-terms' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:PaymentTerm');
+
+         // Purchases endpoints
+         Route::apiResource('/purchases', PurchaseController::class)->parameters([
+            'purchases' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
+        ])->middleware('belongs.to.organization:Purchase');
+
+        // Supplier endpoints
+        Route::apiResource('/suppliers', SupplierController::class)->parameters([
+            'suppliers' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
+        ])->middleware('belongs.to.organization:Supplier');
+
     });
 });
