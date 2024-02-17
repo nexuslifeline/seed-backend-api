@@ -18,5 +18,5 @@ interface CategoryRepositoryInterface
 
     public function paginate(int $perPage);
 
-    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage);
+    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage, ?string $search);
 }
