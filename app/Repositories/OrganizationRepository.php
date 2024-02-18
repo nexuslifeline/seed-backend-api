@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Models\Organization;
 use App\Utils\Constants;
+use App\Models\Organization;
+use App\Models\OrganizationPhoto;
+use Image;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class OrganizationRepository implements OrganizationRepositoryInterface
 {
@@ -109,5 +112,67 @@ class OrganizationRepository implements OrganizationRepositoryInterface
         return Organization::whereHas('organization', function ($q) use ($orgUuid) {
             $q->where('uuid', $orgUuid);
         })->paginate($perPage);
+    }
+
+    /**
+     * Upload a photo of an organization
+     *
+     * @param string $uuid The UUID of the organization.
+     * @param object $uuid The iamge to be uploaded.
+     * @throws Some_Exception_Class A description of the exception that can be thrown.
+     * @return OrganizionPhoto
+     */
+    public function uploadPhoto(string $uuid, $photo)
+    {
+
+        //find organization
+        $organization = $this->findByUuid($uuid);
+
+        //photo resizing
+        $image = Image::make($photo)->resize(null, 350, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        //set photo path
+        $path = 'public/photos/organizations/' . $photo->hashName();
+        //store photo on storage
+        Storage::put($path, $image->stream());
+
+        $organizationPhoto = OrganizationPhoto::updateOrCreate(
+            ['organization_id' => $organization->id],
+            [
+                'path' => $path,
+                'name' => $photo->getClientOriginalName(),
+                'hash_name' => $photo->hashName()
+            ]
+        );
+
+        return $organizationPhoto;
+    }
+
+
+    /**
+     * Deletes a category by its UUID.
+     *
+     * @param string $uuid The UUID of the organization to be deleted.
+     * @throws Some_Exception_Class If an error occurs while deleting the category.
+     * @return void
+     */
+    public function deletePhoto(string $uuid)
+    {
+        //find organization
+        $organization = $this->findByUuid($uuid);
+
+        //get current photo
+        $organizationPhoto = OrganizationPhoto::where('organization_id', $organization->id)->first();
+
+        if($organizationPhoto) {
+            //delete on storage
+            Storage::delete($organizationPhoto->path);
+            //delete on database
+            $organizationPhoto->delete();
+            return true;
+        }
+
+        return false;
     }
 }

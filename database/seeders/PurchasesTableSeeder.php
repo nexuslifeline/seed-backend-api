@@ -2,24 +2,23 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class InvoicesTableSeeder extends Seeder
+class PurchasesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $faker = Faker::create();
 
         foreach (range(1, 50) as $index) {
-            $invoiceDate = $faker->date;
+            $purchaseDate = $faker->date;
 
 
             $paymentTermId = DB::table('payment_terms')
@@ -27,18 +26,17 @@ class InvoicesTableSeeder extends Seeder
                     ->pluck('id')
                     ->first();
 
-            $customer = DB::table('customers')
+            $supplier = DB::table('suppliers')
                 ->inRandomOrder()
                 ->select('id', 'organization_id')
                 ->first();
 
-            $invoiceId = DB::table('invoices')->insertGetId([
+            $purchaseId = DB::table('purchases')->insertGetId([
                 'uuid' => Str::uuid(),
-                'invoice_no' => $faker->unique()->randomNumber(6),
-                'customer_id' => $customer->id,
-                'organization_id' => $customer->organization_id,
-                'issue_date' => $invoiceDate,
-                'due_date' => date('Y-m-d', strtotime($invoiceDate . ' +30 days')),
+                'purchase_no' => $faker->unique()->randomNumber(6),
+                'supplier_id' => $supplier->id,
+                'organization_id' => $supplier->organization_id,
+                'purchase_date' => $purchaseDate,
                 'total_amount' => $faker->randomFloat(2, 50, 500),
                 'payment_term_id' => $paymentTermId
             ]);
@@ -50,8 +48,8 @@ class InvoicesTableSeeder extends Seeder
                     ->pluck('id')
                     ->first();
 
-                DB::table('invoice_items')->insert([
-                    'invoice_id' => $invoiceId,
+                DB::table('purchase_items')->insert([
+                    'purchase_id' => $purchaseId,
                     'product_id' => $productId,
                     'quantity' => $faker->randomNumber(2),
                     'unit_price' => $faker->randomFloat(2, 10, 100),

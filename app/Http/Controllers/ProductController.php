@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductPhotoStoreRequest;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
+use App\Http\Resources\ProductPhotoResource;
 use App\Http\Resources\ProductResource;
 use App\Repositories\ProductRepositoryInterface;
 use App\Utils\ErrorMessages;
@@ -165,6 +167,60 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             // Something went wrong
             Log::error("Error during product deletion. " . $e->getMessage());
+            return response()->json(['error' => ErrorMessages::SOMETHING_WENT_WRONG . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Create/Updates a product photo.
+     *
+     * @param ProductPhotoStoreRequest $request The request object containing the create/updated product photo data.
+     * @param string $uuid The UUID of the product to be photo updated.
+     * @throws ModelNotFoundException If the product with the given UUID does not exist.
+     * @return ProductPhotoResource The created/updated product photo resource.
+     */
+    public function uploadPhoto(ProductPhotoStoreRequest $request, string $orgUuid, string $uuid) {
+        try {
+            // Validate the request and retrieve the data
+            $photo = $request->photo;
+
+            // upload customer photo
+            $productPhoto = $this->productRepository->uploadPhoto($uuid, $photo);
+
+            // Return customer photo
+            return new ProductPhotoResource($productPhoto);
+        } catch (ModelNotFoundException $e) {
+            // Resource not found
+            return response()->json(['error' => ErrorMessages::RESOURCE_NOT_FOUND . $uuid . $e->getMessage()], Response::HTTP_NOT_FOUND);
+        } catch (\Exception $e) {
+            // Something went wrong
+            Log::error("Error during product uploadPhoto. " . $e->getMessage());
+            return response()->json(['error' => ErrorMessages::SOMETHING_WENT_WRONG . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    /**
+     * Deletes a product photo.
+     *
+     * @param string $uuid The UUID of the product to be photo deleted.
+     * @throws \Exception If there is an error during the product photo deletion.
+     * @return \Illuminate\Http\JsonResponse The JSON response containing the success message.
+     */
+    public function deletePhoto(string $orgUuid, string $uuid) {
+        try {
+
+            // deelete customer photo
+            $this->productRepository->deletePhoto($uuid);
+
+            // no content response
+            return response()->noContent();
+        } catch (ModelNotFoundException $e) {
+            // Resource not found
+            return response()->json(['error' => ErrorMessages::RESOURCE_NOT_FOUND . $uuid . $e->getMessage()], Response::HTTP_NOT_FOUND);
+        } catch (\Exception $e) {
+            // Something went wrong
+            Log::error("Error during product deletePhoto. " . $e->getMessage());
             return response()->json(['error' => ErrorMessages::SOMETHING_WENT_WRONG . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

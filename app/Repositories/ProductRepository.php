@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
+use Image;
 use App\Models\Product;
 use App\Utils\Constants;
+use App\Models\ProductPhoto;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -111,5 +114,66 @@ class ProductRepository implements ProductRepositoryInterface
         })
             ->with(['unit:id,uuid,name', 'category:id,uuid,name'])
             ->paginate($perPage);
+    }
+
+
+    /**
+     * Finds and paginates products by organization UUID.
+     *
+     * @param string $uuid The UUID of the product.
+     * @param object $photo The image to be uploaded.
+     * @throws Some_Exception_Class A description of the exception that can be thrown.
+     * @return App\\Models\\ProductPhoto
+     */
+    public function uploadPhoto(string $uuid, $photo)
+    {
+        //find organization
+        $product = $this->findByUuid($uuid);
+
+        //photo resizing
+        $image = Image::make($photo)->resize(null, 350, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        //set photo path
+        $path = 'public/photos/products/' . $photo->hashName();
+        //store photo on storage
+        Storage::put($path, $image->stream());
+
+        $productPhoto = ProductPhoto::updateOrCreate(
+            ['product_id' => $product->id],
+            [
+                'path' => $path,
+                'name' => $photo->getClientOriginalName(),
+                'hash_name' => $photo->hashName()
+            ]
+        );
+
+        return $productPhoto;
+    }
+
+    /**
+     * Deletes a category by its UUID.
+     *
+     * @param string $uuid The UUID of the customer to be deleted.
+     * @throws Some_Exception_Class If an error occurs while deleting the category.
+     * @return void
+     */
+    public function deletePhoto(string $uuid)
+    {
+        //find organization
+        $product = $this->findByUuid($uuid);
+
+        //get current photo
+        $productPhoto = ProductPhoto::where('product_id', $product->id)->first();
+
+        if($productPhoto) {
+            //delete on storage
+            Storage::delete($productPhoto->path);
+            //delete on database
+            $productPhoto->delete();
+            return true;
+        }
+
+        return false;
     }
 }

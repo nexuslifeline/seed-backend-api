@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-interface OrganizationRepositoryInterface
+interface SupplierRepositoryInterface
 {
     public function create(array $data);
 
@@ -20,7 +20,4 @@ interface OrganizationRepositoryInterface
 
     public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage);
 
-    public function uploadPhoto(string $uuid, $photo);
-
-    public function deletePhoto(string $uuid);
 }
