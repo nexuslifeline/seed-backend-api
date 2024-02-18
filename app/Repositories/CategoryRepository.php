@@ -104,10 +104,12 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @throws Some_Exception_Class A description of the exception that can be thrown.
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator The paginated products.
      */
-    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage = Constants::DEFAULT_PER_PAGE)
+    public function findByOrgUuidAndPaginate(string $orgUuid, ?int $perPage = Constants::DEFAULT_PER_PAGE, ?string $search)
     {
-        return Category::whereHas('organization', function ($q) use ($orgUuid) {
+        return Category::whereHas('organization', function ($q) use ($orgUuid, $search) {
             $q->where('uuid', $orgUuid);
+        })->when($search, function ($query, $search) {
+            return $query->where('name', 'like', '%' . $search . '%')->orWhere('description', 'like', '%' . $search . '%');
         })->paginate($perPage);
     }
 }
