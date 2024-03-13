@@ -3,18 +3,21 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\UnitController;
+use App\Http\Controllers\EWalletController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\InvoiceSettingController;
-use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\UnitController;
-use App\Http\Controllers\PaymentTermController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\PaymentTermController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\InvoiceSettingController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,8 +109,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             'payment-terms' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:PaymentTerm');
 
-         // Purchases endpoints
-         Route::apiResource('/purchases', PurchaseController::class)->parameters([
+        // Purchases endpoints
+        Route::apiResource('/purchases', PurchaseController::class)->parameters([
             'purchases' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:Purchase');
 
@@ -116,5 +119,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             'suppliers' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
         ])->middleware('belongs.to.organization:Supplier');
 
+        // Bank\ endpoints
+        Route::apiResource('/banks', BankController::class)->parameters([
+            'banks' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
+        ])->middleware('belongs.to.organization:Bank');
+
+        // E Wallet endpoints
+        Route::apiResource('/e-wallets', EWalletController::class)->parameters([
+            'e-wallets' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
+        ])->middleware('belongs.to.organization:EWallet');
+
+         // Payment endpoints
+         Route::apiResource('/payments', PaymentController::class)->parameters([
+            'payments' => 'uuid', // Change the route parameter name since we change the model binding to 'uuid'
+        ])->middleware('belongs.to.organization:Payment');
     });
 });
