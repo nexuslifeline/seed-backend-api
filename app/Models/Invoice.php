@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\OrgFillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -30,4 +31,14 @@ class Invoice extends BaseModel
     {
         return $this->hasOne(InvoiceSetting::class);
     }
+
+    public function paymentInvoices(): HasMany {
+        return $this->hasMany(PaymentInvoice::class)
+            ->whereHas('payment');
+    }
+
+    public function getTotalPaidAttribute() {
+        return $this->paymentInvoices()->sum('line_total');
+    }
+
 }
