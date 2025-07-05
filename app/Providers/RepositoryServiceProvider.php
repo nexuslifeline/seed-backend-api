@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\BankRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UnitRepository;
 use App\Repositories\UserRepository;
@@ -16,14 +17,18 @@ use App\Repositories\InvoiceItemRepository;
 use App\Repositories\PaymentTermRepository;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\PurchaseItemRepository;
+use App\Repositories\BankRepositoryInterface;
 use App\Repositories\RoleRepositoryInterface;
 use App\Repositories\UnitRepositoryInterface;
 use App\Repositories\UserRepositoryInterface;
 use App\Repositories\InvoiceSettingRepository;
+use App\Repositories\EWalletRepositoryInterface;
 use App\Repositories\InvoiceRepositoryInterface;
+use App\Repositories\PaymentRepositoryInterface;
 use App\Repositories\ProductRepositoryInterface;
 use App\Repositories\CategoryRepositoryInterface;
 use App\Repositories\CustomerRepositoryInterface;
+use App\Repositories\EWalletRepository;
 use App\Repositories\PurchaseRepositoryInterface;
 use App\Repositories\SupplierRepositoryInterface;
 use App\Repositories\InvoiceItemRepositoryInterface;
@@ -31,6 +36,7 @@ use App\Repositories\PaymentTermRepositoryInterface;
 use App\Repositories\OrganizationRepositoryInterface;
 use App\Repositories\PurchaseItemRepositoryInterface;
 use App\Repositories\InvoiceSettingRepositoryInterface;
+use App\Repositories\PaymentRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -53,6 +59,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SupplierRepositoryInterface:: class, SupplierRepository::class);
         $this->app->bind(PurchaseRepositoryInterface:: class, PurchaseRepository::class);
         $this->app->bind(PurchaseItemRepositoryInterface:: class, PurchaseItemRepository::class);
+        $this->app->bind(BankRepositoryInterface:: class, BankRepository::class);
+        $this->app->bind(EWalletRepositoryInterface:: class, EWalletRepository::class);
+        $this->app->bind(PaymentRepositoryInterface:: class, PaymentRepository::class);
     }
 
     /**

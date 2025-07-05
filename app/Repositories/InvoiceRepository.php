@@ -89,7 +89,8 @@ class InvoiceRepository implements InvoiceRepositoryInterface
      */
     public function findByUuid(string $uuid)
     {
-        return Invoice::where('uuid', $uuid)->firstOrFail();
+        $invoice = Invoice::where('uuid', $uuid)->firstOrFail();
+        return $invoice->append('total_paid');
     }
 
     /**
