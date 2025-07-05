@@ -37,10 +37,12 @@ class CategoryController extends Controller
     public function index(Request $request, string $orgUuid)
     {
         try {
+            //retrive search param
+            $search = $request->input('search');
             // Retrieve the per_page parameter from the request
             $perPage = $request->input('per_page');
             // Retrieve the categories from the repository
-            $categories = $this->categoryRepository->findByOrgUuidAndPaginate($orgUuid, $perPage);
+            $categories = $this->categoryRepository->findByOrgUuidAndPaginate($orgUuid, $perPage, $search);
             // Return a collection of category resources
             return CategoryResource::collection($categories);
         } catch (\Exception $e) {
